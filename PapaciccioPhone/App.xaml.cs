@@ -7,6 +7,7 @@ using Windows.ApplicationModel;
 using Windows.ApplicationModel.Activation;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
+using Windows.Storage;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Controls.Primitives;
@@ -17,6 +18,7 @@ using Windows.UI.Xaml.Media.Animation;
 using Windows.UI.Xaml.Navigation;
 
 // Pour plus d'informations sur le modèle Application vide, consultez la page http://go.microsoft.com/fwlink/?LinkId=391641
+using PapaciccioPhone.Pages;
 
 namespace PapaciccioPhone
 {
@@ -88,10 +90,22 @@ namespace PapaciccioPhone
                 rootFrame.ContentTransitions = null;
                 rootFrame.Navigated += this.RootFrame_FirstNavigated;
 
+                var serverAddress = ApplicationData.Current.RoamingSettings.Values["serverAddress"] as string;
+                Type destinationPageType = null;
+
+                if (String.IsNullOrEmpty(serverAddress))
+                {
+                    destinationPageType = typeof (FirstLaunchPage);
+                }
+                else
+                {
+                    destinationPageType = typeof (CommandPage);
+                }
+
                 // Quand la pile de navigation n'est pas restaurée, accédez à la première page,
                 // puis configurez la nouvelle page en transmettant les informations requises en tant que
                 // paramètre
-                if (!rootFrame.Navigate(typeof(MainPage), e.Arguments))
+                if (!rootFrame.Navigate(destinationPageType, e.Arguments))
                 {
                     throw new Exception("Failed to create initial page");
                 }

@@ -5,7 +5,7 @@
   <Properties>
     <DisplayName>PapaciccioPhone</DisplayName>
     <PublisherDisplayName>mgoetz</PublisherDisplayName>
-    <Logo>Assets\StoreLogo.png</Logo>
+    <Logo>Assets\StoreImages\StoreLogo.png</Logo>
   </Properties>
   <Prerequisites>
     <OSMinVersion>6.3.1</OSMinVersion>
@@ -16,10 +16,10 @@
   </Resources>
   <Applications>
     <Application Id="App" Executable="$targetnametoken$.exe" EntryPoint="PapaciccioPhone.App">
-      <m3:VisualElements DisplayName="PapaciccioPhone" Square150x150Logo="Assets\Logo.png" Square44x44Logo="Assets\SmallLogo.png" Description="PapaciccioPhone" ForegroundText="light" BackgroundColor="transparent">
-        <m3:DefaultTile Wide310x150Logo="Assets\WideLogo.png" Square71x71Logo="Assets\Square71x71Logo.png">
+      <m3:VisualElements DisplayName="Papaciccio" Square150x150Logo="Assets\StoreImages\Logo.png" Square44x44Logo="Assets\StoreImages\SmallLogo.png" Description="Papaciccio" ForegroundText="light" BackgroundColor="transparent">
+        <m3:DefaultTile Wide310x150Logo="Assets\StoreImages\WideLogo.png" Square71x71Logo="Assets\StoreImages\Square71x71Logo.png">
         </m3:DefaultTile>
-        <m3:SplashScreen Image="Assets\SplashScreen.png" />
+        <m3:SplashScreen Image="Assets\StoreImages\SplashScreen.png" />
         <m3:InitialRotationPreference>
           <m3:Rotation Preference="portrait" />
         </m3:InitialRotationPreference>
