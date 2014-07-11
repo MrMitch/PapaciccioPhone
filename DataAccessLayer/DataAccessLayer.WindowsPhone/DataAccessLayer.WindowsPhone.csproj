@@ -4,16 +4,17 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{111FC354-BA6F-430B-81B6-09E6147134F4}</ProjectGuid>
+    <ProjectGuid>{974E64B4-BD3D-4570-8388-1D68D7E5E70C}</ProjectGuid>
     <OutputType>AppContainerExe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>PapaciccioPhone</RootNamespace>
-    <AssemblyName>PapaciccioPhone</AssemblyName>
+    <RootNamespace>DataAccessLayer</RootNamespace>
+    <AssemblyName>DataAccessLayer.WindowsPhone</AssemblyName>
     <DefaultLanguage>fr-FR</DefaultLanguage>
     <TargetPlatformVersion>8.1</TargetPlatformVersion>
     <MinimumVisualStudioVersion>12</MinimumVisualStudioVersion>
     <FileAlignment>512</FileAlignment>
     <ProjectTypeGuids>{76F1466A-8B6D-4E39-A767-685A06062A39};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
+    <SynthesizeLinkMetadata>true</SynthesizeLinkMetadata>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <PlatformTarget>AnyCPU</PlatformTarget>
@@ -79,36 +80,13 @@
     <Prefer32Bit>true</Prefer32Bit>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="App.xaml.cs">
-      <DependentUpon>App.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Common\NavigationHelper.cs" />
-    <Compile Include="Common\ObservableDictionary.cs" />
-    <Compile Include="Common\RelayCommand.cs" />
-    <Compile Include="Common\SuspensionManager.cs" />
-    <Compile Include="Controls\StrippedListView.cs" />
-    <Compile Include="Converters\DateTimeToRelativeStringConverter.cs" />
-    <Compile Include="Converters\StringToCamelCaseString.cs" />
-    <Compile Include="Converters\StringToFirstCharConverter.cs" />
-    <Compile Include="Converters\StringToUpperStringConverter.cs" />
-    <Compile Include="DataAccessLayer\Implementations\HttpCommandRepository.cs" />
-    <Compile Include="DataAccessLayer\Interfaces\ICommandRepository.cs" />
-    <Compile Include="DataAccessLayer\RepositoryFactory.cs" />
-    <Compile Include="Models\ApiResponses\CommandResponse.cs" />
-    <Compile Include="Models\Command.cs" />
-    <Compile Include="Models\Order.cs" />
-    <Compile Include="Models\ApiResponses\PapaciccioApiResponse.cs" />
-    <Compile Include="Pages\CommandPage.xaml.cs">
-      <DependentUpon>CommandPage.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Pages\FirstLaunchPage.xaml.cs">
-      <DependentUpon>FirstLaunchPage.xaml</DependentUpon>
+    <!-- A reference to the entire .Net Framework and Windows SDK are automatically included -->
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="MainPage.xaml.cs">
+      <DependentUpon>MainPage.xaml</DependentUpon>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="ViewModels\BindableViewModel.cs" />
-    <Compile Include="ViewModels\CommandPageViewModel.cs" />
-    <Compile Include="ViewModels\CommandViewModel.cs" />
-    <Compile Include="ViewModels\FirstLaunchPageViewModel.cs" />
   </ItemGroup>
   <ItemGroup>
     <AppxManifest Include="Package.appxmanifest">
@@ -116,35 +94,18 @@
     </AppxManifest>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Assets\ContentImages\papaciccio.png" />
-    <Content Include="Assets\StoreImages\Logo.scale-240.png" />
-    <Content Include="Assets\StoreImages\SmallLogo.scale-240.png" />
-    <Content Include="Assets\StoreImages\SplashScreen.scale-240.png" />
-    <Content Include="Assets\StoreImages\Square71x71Logo.scale-240.png" />
-    <Content Include="Assets\StoreImages\StoreLogo.scale-240.png" />
-    <Content Include="Assets\StoreImages\WideLogo.scale-240.png" />
+    <Content Include="Assets\Logo.scale-240.png" />
+    <Content Include="Assets\SmallLogo.scale-240.png" />
+    <Content Include="Assets\SplashScreen.scale-240.png" />
+    <Content Include="Assets\Square71x71Logo.scale-240.png" />
+    <Content Include="Assets\StoreLogo.scale-240.png" />
+    <Content Include="Assets\WideLogo.scale-240.png" />
   </ItemGroup>
   <ItemGroup>
-    <ApplicationDefinition Include="App.xaml">
+    <Page Include="MainPage.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
-    </ApplicationDefinition>
-    <Page Include="Pages\CommandPage.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Pages\FirstLaunchPage.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-  </ItemGroup>
-  <ItemGroup>
-    <Reference Include="Newtonsoft.Json">
-      <HintPath>..\packages\Newtonsoft.Json.6.0.3\lib\portable-net45+wp80+win8+wpa81\Newtonsoft.Json.dll</HintPath>
-    </Reference>
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="packages.config" />
   </ItemGroup>
   <PropertyGroup Condition=" '$(VisualStudioVersion)' == '' or '$(VisualStudioVersion)' &lt; '12.0' ">
     <VisualStudioVersion>12.0</VisualStudioVersion>
@@ -152,6 +113,7 @@
   <PropertyGroup Condition=" '$(TargetPlatformIdentifier)' == '' ">
     <TargetPlatformIdentifier>WindowsPhoneApp</TargetPlatformIdentifier>
   </PropertyGroup>
+  <Import Project="..\DataAccessLayer.Shared\DataAccessLayer.Shared.projitems" Label="Shared" />
   <Import Project="$(MSBuildExtensionsPath)\Microsoft\WindowsXaml\v$(VisualStudioVersion)\Microsoft.Windows.UI.Xaml.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

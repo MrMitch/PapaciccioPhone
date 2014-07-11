@@ -1,15 +1,24 @@
-﻿<Page
+﻿<Page x:Name="RootPage"
     x:Class="PapaciccioPhone.Pages.CommandPage"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:local="using:PapaciccioPhone.Pages"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:converters="using:PapaciccioPhone.Converters"
+    xmlns:ctrls="using:PapaciccioPhone.Controls"
     mc:Ignorable="d"
-    Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+    DataContext="{Binding ViewModel, RelativeSource={RelativeSource Self}}"
+    Background="{StaticResource PageBackgroundBrush}">
 
-    <Grid x:Name="LayoutRoot">
-
+    <Page.Resources>
+        <converters:DateTimeToRelativeStringConverter x:Key="DateTimeToRelativeStringConverter" />
+        <converters:StringToCamelCaseString x:Key="StringToCamelCaseString" />
+        <converters:StringToUpperStringConverter x:Key="StringToUpperStringConverter" />
+        <converters:StringToFirstCharConverter x:Key="StringToFirstCharConverter" />
+    </Page.Resources>
+    
+    <Grid>
         <Grid.ChildrenTransitions>
             <TransitionCollection>
                 <EntranceThemeTransition/>
@@ -23,13 +32,82 @@
 
         <!-- Panneau Titre -->
         <StackPanel Grid.Row="0" Margin="19,0,0,0">
-            <TextBlock Text="MY APPLICATION" Style="{ThemeResource TitleTextBlockStyle}" Margin="0,12,0,0"/>
-            <TextBlock Text="page title" Margin="0,-6.5,0,26.5" Style="{ThemeResource HeaderTextBlockStyle}" CharacterSpacing="{ThemeResource PivotHeaderItemCharacterSpacing}"/>
+            <TextBlock Text="{StaticResource AppName}" Style="{ThemeResource TitleTextBlockStyle}" Margin="0,12,0,0"/>
+            <TextBlock Margin="0,-6.5,0,26.5" 
+                       Text="{Binding Command.Date, Converter={StaticResource DateTimeToRelativeStringConverter}}"
+                       Style="{ThemeResource HeaderTextBlockStyle}" 
+                       CharacterSpacing="{ThemeResource PivotHeaderItemCharacterSpacing}" />
         </StackPanel>
 
-        <!--TODO: le contenu doit être placé dans la grille suivante-->
-        <Grid Grid.Row="1" x:Name="ContentRoot" Margin="19,9.5,19,0">
+        <Grid Grid.Row="1">
+            <ctrls:StrippedListView ItemsSource="{Binding Command.Orders}"
+                                    Colors="{Binding Colors, ElementName=RootPage}">
+                <ctrls:StrippedListView.ItemContainerStyle>
+                    <Style TargetType="ListViewItem">
+                        <Setter Property="HorizontalContentAlignment" Value="Stretch" />
+                    </Style>
+                </ctrls:StrippedListView.ItemContainerStyle>
+                <ctrls:StrippedListView.ItemTemplate>
+                    <DataTemplate>
+                        <StackPanel Margin="20">
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="Auto" />
+                                    <ColumnDefinition Width="*" />
+                                </Grid.ColumnDefinitions>
+                                <TextBlock Grid.Column="0" Style="{StaticResource ListViewItemTextBlockStyle}">
+                                    <Run Text="{Binding Size, Converter={StaticResource StringToUpperStringConverter}}" /> 
+                                    <Run Text="{Binding Pasta, Converter={StaticResource StringToCamelCaseString}}" />
+                                </TextBlock>
 
+                                <TextBlock Grid.Column="1" 
+                                           Text="{Binding Name}" 
+                                           VerticalAlignment="Center"
+                                           MaxLines="2"
+                                           TextTrimming="CharacterEllipsis"
+                                           Margin="20,0,0,0"
+                                           Style="{StaticResource ListViewItemTextBlockStyle}"
+                                           Opacity="0.5"/>
+                            </Grid>
+
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="0.8*" />
+                                    <ColumnDefinition Width="0.2*" />
+                                </Grid.ColumnDefinitions>
+                                
+                                <ItemsControl Grid.Column="0" ItemsSource="{Binding Sauces}">
+                                    <ItemsControl.ItemTemplate>
+                                        <DataTemplate>
+                                            <TextBlock Style="{StaticResource ListViewItemContentTextBlockStyle}" 
+                                                   Text="{Binding Converter={StaticResource StringToCamelCaseString}}" 
+                                                   TextWrapping="Wrap"/>
+                                        </DataTemplate>
+                                    </ItemsControl.ItemTemplate>
+                                </ItemsControl>
+                                
+                                <TextBlock Grid.Column="1" 
+                                           TextWrapping="Wrap"
+                                           TextAlignment="Center" 
+                                           Style="{StaticResource ListViewItemTextBlockStyle}"
+                                           Text="{Binding ToppingsAbbreviation}" />
+                            </Grid>
+                        </StackPanel>
+                    </DataTemplate>
+                </ctrls:StrippedListView.ItemTemplate>
+            </ctrls:StrippedListView>
         </Grid>
     </Grid>
+    <Page.BottomAppBar>
+        <CommandBar>
+            <CommandBar.PrimaryCommands>
+                <AppBarButton Icon="Add" Label="ajouter" />
+                <AppBarButton Icon="Sync" Label="actualiser" />
+            </CommandBar.PrimaryCommands>
+            
+            <CommandBar.SecondaryCommands>
+                <AppBarButton Icon="AllApps" Label="récap'" />
+            </CommandBar.SecondaryCommands>
+        </CommandBar>
+    </Page.BottomAppBar>
 </Page>

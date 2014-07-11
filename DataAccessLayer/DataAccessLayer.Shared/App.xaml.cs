@@ -7,7 +7,6 @@ using Windows.ApplicationModel;
 using Windows.ApplicationModel.Activation;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
-using Windows.Storage;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Controls.Primitives;
@@ -17,17 +16,18 @@ using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Media.Animation;
 using Windows.UI.Xaml.Navigation;
 
-// Pour plus d'informations sur le modèle Application vide, consultez la page http://go.microsoft.com/fwlink/?LinkId=391641
-using PapaciccioPhone.Pages;
+// Pour plus d'informations sur le modèle Application vide, consultez la page http://go.microsoft.com/fwlink/?LinkId=234227
 
-namespace PapaciccioPhone
+namespace DataAccessLayer
 {
     /// <summary>
     /// Fournit un comportement spécifique à l'application afin de compléter la classe Application par défaut.
     /// </summary>
     public sealed partial class App : Application
     {
+#if WINDOWS_PHONE_APP
         private TransitionCollection transitions;
+#endif
 
         /// <summary>
         /// Initialise l'objet d'application de singleton.  Il s'agit de la première ligne du code créé
@@ -77,6 +77,7 @@ namespace PapaciccioPhone
 
             if (rootFrame.Content == null)
             {
+#if WINDOWS_PHONE_APP
                 // Supprime la navigation tourniquet pour le démarrage.
                 if (rootFrame.ContentTransitions != null)
                 {
@@ -89,25 +90,12 @@ namespace PapaciccioPhone
 
                 rootFrame.ContentTransitions = null;
                 rootFrame.Navigated += this.RootFrame_FirstNavigated;
+#endif
 
-                var serverAddress = ApplicationData.Current.RoamingSettings.Values["serverAddress"] as string;
-                Type destinationPageType = null;
-                object args = null;
-
-                if (String.IsNullOrEmpty(serverAddress))
-                {
-                    destinationPageType = typeof (FirstLaunchPage);
-                }
-                else
-                {
-                    destinationPageType = typeof (CommandPage);
-                    args = new DateTime(2014, 07, 10); //DateTime.Now;
-                }
-                
                 // Quand la pile de navigation n'est pas restaurée, accédez à la première page,
                 // puis configurez la nouvelle page en transmettant les informations requises en tant que
                 // paramètre
-                if (!rootFrame.Navigate(destinationPageType, args))
+                if (!rootFrame.Navigate(typeof(MainPage), e.Arguments))
                 {
                     throw new Exception("Failed to create initial page");
                 }
@@ -117,6 +105,7 @@ namespace PapaciccioPhone
             Window.Current.Activate();
         }
 
+#if WINDOWS_PHONE_APP
         /// <summary>
         /// Restaure les transitions de contenu une fois l'application lancée.
         /// </summary>
@@ -128,6 +117,7 @@ namespace PapaciccioPhone
             rootFrame.ContentTransitions = this.transitions ?? new TransitionCollection() { new NavigationThemeTransition() };
             rootFrame.Navigated -= this.RootFrame_FirstNavigated;
         }
+#endif
 
         /// <summary>
         /// Appelé lorsque l'exécution de l'application est suspendue.  L'état de l'application est enregistré

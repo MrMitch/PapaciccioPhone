@@ -6,6 +6,14 @@
 
     <Application.Resources>
         <x:String x:Key="AppName">PapaCiccio</x:String>
+
+        <Color x:Key="PageBackgroundColor">#0D8FA8</Color>
+        
+        <SolidColorBrush x:Key="PageBackgroundBrush" Color="{StaticResource PageBackgroundColor}" />
+        
+        <Style TargetType="CommandBar">
+            <Setter Property="Background" Value="#075463" />
+        </Style>
     </Application.Resources>
     
 </Application>

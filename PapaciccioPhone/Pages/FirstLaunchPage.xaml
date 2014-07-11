@@ -6,8 +6,8 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d"
-    DataContext="{Binding ViewModel, RelativeSource={RelativeSource Self}}"
-    Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+    Background="{StaticResource PageBackgroundBrush}"
+    DataContext="{Binding ViewModel, RelativeSource={RelativeSource Self}}">
 
     <Grid>
         <StackPanel VerticalAlignment="Center">
@@ -28,6 +28,7 @@
                      Margin="10,100,10,10" 
                      PlaceholderText="Please enter the server address"
                      AcceptsReturn="False" 
+                     InputScope="Url"
                      Text="{Binding ServerAddress, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
         </StackPanel>
     </Grid>
@@ -36,8 +37,7 @@
         <CommandBar IsSticky="True">
             <AppBarButton Label="Validate" 
                           Icon="Accept"
-                          Click="ValidateButton_OnClick"
-                          Command="{Binding SubmitServerAddressCommand, ElementName=RootPage}"/>
+                          Command="{Binding SubmitServerAddressCommand}"/>
         </CommandBar>
     </Page.BottomAppBar>
 </Page>

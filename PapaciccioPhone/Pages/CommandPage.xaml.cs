@@ -1,4 +1,6 @@
-﻿using PapaciccioPhone.Common;
+﻿using Windows.UI;
+using Windows.UI.Popups;
+using PapaciccioPhone.Common;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -17,6 +19,8 @@ using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Navigation;
 
 // Pour en savoir plus sur le modèle d'élément Page de base, consultez la page http://go.microsoft.com/fwlink/?LinkID=390556
+using PapaciccioPhone.DataAccessLayer;
+using PapaciccioPhone.ViewModels;
 
 namespace PapaciccioPhone.Pages
 {
@@ -25,35 +29,35 @@ namespace PapaciccioPhone.Pages
     /// </summary>
     public sealed partial class CommandPage : Page
     {
+        /// <summary>
+        /// Obtient le <see cref="NavigationHelper"/> associé à ce <see cref="Page"/>.
+        /// </summary>
         private NavigationHelper navigationHelper;
-        private ObservableDictionary defaultViewModel = new ObservableDictionary();
+        public NavigationHelper NavigationHelper
+        {
+            get { return this.navigationHelper; }
+        }
+
+        public CommandPageViewModel ViewModel { get; set; }
+
+        public List<Color> Colors { get; set; }
 
         public CommandPage()
         {
+            ViewModel = new CommandPageViewModel();
+            Colors = new List<Color>()
+            {
+                Color.FromArgb(45,255,255,255),
+                Windows.UI.Colors.Transparent
+            };
+            
             this.InitializeComponent();
 
             this.navigationHelper = new NavigationHelper(this);
             this.navigationHelper.LoadState += this.NavigationHelper_LoadState;
             this.navigationHelper.SaveState += this.NavigationHelper_SaveState;
         }
-
-        /// <summary>
-        /// Obtient le <see cref="NavigationHelper"/> associé à ce <see cref="Page"/>.
-        /// </summary>
-        public NavigationHelper NavigationHelper
-        {
-            get { return this.navigationHelper; }
-        }
-
-        /// <summary>
-        /// Obtient le modèle d'affichage pour ce <see cref="Page"/>.
-        /// Cela peut être remplacé par un modèle d'affichage fortement typé.
-        /// </summary>
-        public ObservableDictionary DefaultViewModel
-        {
-            get { return this.defaultViewModel; }
-        }
-
+        
         /// <summary>
         /// Remplit la page à l'aide du contenu passé lors de la navigation. Tout état enregistré est également
         /// fourni lorsqu'une page est recréée à partir d'une session antérieure.
@@ -65,8 +69,24 @@ namespace PapaciccioPhone.Pages
         /// <see cref="Frame.Navigate(Type, Object)"/> lors de la requête initiale de cette page et
         /// un dictionnaire d'état conservé par cette page durant une session
         /// antérieure.  L'état n'aura pas la valeur Null lors de la première visite de la page.</param>
-        private void NavigationHelper_LoadState(object sender, LoadStateEventArgs e)
+        private async void NavigationHelper_LoadState(object sender, LoadStateEventArgs e)
         {
+            var commandDate = (DateTime) (e.NavigationParameter ?? e.PageState["date"]);
+            var command = await RepositoryFactory.CommandRepository.GetCommand(commandDate);
+
+            if (command != null)
+            {
+                ViewModel.Command = command;
+            }
+            else
+            {
+                if (commandDate != DateTime.Now)
+                {
+                    var msg = new MessageDialog("Pas de commande pour cette date", "Oops");
+                    msg.Commands.Add(new UICommand("Ok", uiCommand => Frame.Navigate(typeof (CommandPage), DateTime.Now)));
+                    await msg.ShowAsync();
+                }
+            }
         }
 
         /// <summary>
@@ -79,6 +99,7 @@ namespace PapaciccioPhone.Pages
         /// état sérialisable.</param>
         private void NavigationHelper_SaveState(object sender, SaveStateEventArgs e)
         {
+            //e.PageState["date"] = ViewModel.Command.Date;
         }
 
         #region Inscription de NavigationHelper
