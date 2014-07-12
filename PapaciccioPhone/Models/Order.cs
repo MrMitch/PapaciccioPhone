@@ -26,6 +26,10 @@ namespace PapaciccioPhone.Models
         public string ToppingsAbbreviation { 
             get
             {
+                if (Toppings == null)
+                {
+                    return String.Empty;
+                }
                 return String.Join(" & ", Toppings.Select(s => s.ToUpperInvariant()[0]));
             } 
         }
