@@ -1,26 +1,12 @@
-﻿using Windows.UI;
-using Windows.UI.Popups;
-using PapaciccioPhone.Common;
+﻿using PapaciccioPhone.Common;
+// Pour en savoir plus sur le modèle d'élément Page de base, consultez la page http://go.microsoft.com/fwlink/?LinkID=390556
+using PapaciccioPhone.ViewModels;
 using System;
 using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Runtime.InteropServices.WindowsRuntime;
-using Windows.Foundation;
-using Windows.Foundation.Collections;
-using Windows.Graphics.Display;
-using Windows.UI.ViewManagement;
-using Windows.UI.Xaml;
+using Windows.UI;
+using Windows.UI.Popups;
 using Windows.UI.Xaml.Controls;
-using Windows.UI.Xaml.Controls.Primitives;
-using Windows.UI.Xaml.Data;
-using Windows.UI.Xaml.Input;
-using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Navigation;
-
-// Pour en savoir plus sur le modèle d'élément Page de base, consultez la page http://go.microsoft.com/fwlink/?LinkID=390556
-using PapaciccioPhone.DataAccessLayer;
-using PapaciccioPhone.ViewModels;
 
 namespace PapaciccioPhone.Pages
 {
@@ -72,11 +58,11 @@ namespace PapaciccioPhone.Pages
         private async void NavigationHelper_LoadState(object sender, LoadStateEventArgs e)
         {
             var commandDate = (DateTime) (e.NavigationParameter ?? e.PageState["date"]);
-            var command = await RepositoryFactory.CommandRepository.GetCommand(commandDate);
-
+            var command = await ViewModel.GetCommand(commandDate);
+            
             if (command != null)
             {
-                ViewModel.Command = command;
+                ViewModel.CommandViewModel = command;
             }
             else
             {
@@ -99,7 +85,7 @@ namespace PapaciccioPhone.Pages
         /// état sérialisable.</param>
         private void NavigationHelper_SaveState(object sender, SaveStateEventArgs e)
         {
-            //e.PageState["date"] = ViewModel.Command.Date;
+            //e.PageState["date"] = ViewModel.CommandViewModel.Date;
         }
 
         #region Inscription de NavigationHelper
@@ -128,5 +114,11 @@ namespace PapaciccioPhone.Pages
         }
 
         #endregion
+
+        private void ListViewBase_OnItemClick(object sender, ItemClickEventArgs e)
+        {
+            var order = e.ClickedItem as OrderViewModel;
+            order.Checked = !order.Checked;
+        }
     }
 }

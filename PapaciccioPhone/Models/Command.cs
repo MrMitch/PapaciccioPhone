@@ -1,9 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using System.Collections.Generic;
 using System.Runtime.Serialization;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace PapaciccioPhone.Models
 {
@@ -18,6 +14,9 @@ namespace PapaciccioPhone.Models
 
         [DataMember(Name = "sauces")]
         public List<string> Sauces { get; set; }
+
+        [DataMember(Name = "orders")]
+        public List<Order> Orders { get; set; }
 
         [DataMember(Name = "toppings")]
         public List<string> Toppings { get; set; }

@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using System.Collections.Generic;
 using System.Runtime.Serialization;
 
 namespace PapaciccioPhone.Models
@@ -22,16 +20,5 @@ namespace PapaciccioPhone.Models
 
         [DataMember(Name = "name")]
         public string Name { get; set; }
-
-        public string ToppingsAbbreviation { 
-            get
-            {
-                if (Toppings == null)
-                {
-                    return String.Empty;
-                }
-                return String.Join(" & ", Toppings.Select(s => s.ToUpperInvariant()[0]));
-            } 
-        }
     }
 }

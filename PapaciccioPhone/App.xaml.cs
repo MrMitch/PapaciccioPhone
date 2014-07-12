@@ -1,24 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Runtime.InteropServices.WindowsRuntime;
+﻿// Pour plus d'informations sur le modèle Application vide, consultez la page http://go.microsoft.com/fwlink/?LinkId=391641
+using PapaciccioPhone.Pages;
+using System;
 using Windows.ApplicationModel;
 using Windows.ApplicationModel.Activation;
-using Windows.Foundation;
-using Windows.Foundation.Collections;
-using Windows.Storage;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
-using Windows.UI.Xaml.Controls.Primitives;
-using Windows.UI.Xaml.Data;
-using Windows.UI.Xaml.Input;
-using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Media.Animation;
 using Windows.UI.Xaml.Navigation;
-
-// Pour plus d'informations sur le modèle Application vide, consultez la page http://go.microsoft.com/fwlink/?LinkId=391641
-using PapaciccioPhone.Pages;
 
 namespace PapaciccioPhone
 {
@@ -90,9 +78,14 @@ namespace PapaciccioPhone
                 rootFrame.ContentTransitions = null;
                 rootFrame.Navigated += this.RootFrame_FirstNavigated;
 
-                var serverAddress = ApplicationData.Current.RoamingSettings.Values["serverAddress"] as string;
                 Type destinationPageType = null;
                 object args = null;
+
+#if DEBUG
+                destinationPageType = typeof (CommandPage);
+                args = DateTime.Now;
+#else
+                var serverAddress = ApplicationData.Current.RoamingSettings.Values["serverAddress"] as string;
 
                 if (String.IsNullOrEmpty(serverAddress))
                 {
@@ -103,7 +96,8 @@ namespace PapaciccioPhone
                     destinationPageType = typeof (CommandPage);
                     args = new DateTime(2014, 07, 10); //DateTime.Now;
                 }
-                
+#endif
+
                 // Quand la pile de navigation n'est pas restaurée, accédez à la première page,
                 // puis configurez la nouvelle page en transmettant les informations requises en tant que
                 // paramètre

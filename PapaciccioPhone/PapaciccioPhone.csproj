@@ -86,11 +86,19 @@
     <Compile Include="Common\ObservableDictionary.cs" />
     <Compile Include="Common\RelayCommand.cs" />
     <Compile Include="Common\SuspensionManager.cs" />
+    <Compile Include="Controls\NewOrderDialog.xaml.cs">
+      <DependentUpon>NewOrderDialog.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\SettingsDialog.xaml.cs">
+      <DependentUpon>SettingsDialog.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Controls\StrippedListView.cs" />
+    <Compile Include="Converters\BooleanConveter.cs" />
     <Compile Include="Converters\DateTimeToRelativeStringConverter.cs" />
     <Compile Include="Converters\StringToCamelCaseString.cs" />
     <Compile Include="Converters\StringToFirstCharConverter.cs" />
     <Compile Include="Converters\StringToUpperStringConverter.cs" />
+    <Compile Include="DataAccessLayer\Implementations\MockCommandRepository.cs" />
     <Compile Include="DataAccessLayer\Implementations\HttpCommandRepository.cs" />
     <Compile Include="DataAccessLayer\Interfaces\ICommandRepository.cs" />
     <Compile Include="DataAccessLayer\RepositoryFactory.cs" />
@@ -109,6 +117,7 @@
     <Compile Include="ViewModels\CommandPageViewModel.cs" />
     <Compile Include="ViewModels\CommandViewModel.cs" />
     <Compile Include="ViewModels\FirstLaunchPageViewModel.cs" />
+    <Compile Include="ViewModels\OrderViewModel.cs" />
   </ItemGroup>
   <ItemGroup>
     <AppxManifest Include="Package.appxmanifest">
@@ -129,6 +138,14 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Page Include="Controls\NewOrderDialog.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\SettingsDialog.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Pages\CommandPage.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>

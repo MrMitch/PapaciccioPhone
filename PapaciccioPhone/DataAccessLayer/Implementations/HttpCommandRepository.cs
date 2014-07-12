@@ -2,7 +2,6 @@
 using PapaciccioPhone.DataAccessLayer.Interfaces;
 using PapaciccioPhone.Models;
 using PapaciccioPhone.Models.ApiResponses;
-using PapaciccioPhone.ViewModels;
 using System;
 using System.Threading.Tasks;
 using Windows.Storage;
@@ -25,9 +24,9 @@ namespace PapaciccioPhone.DataAccessLayer.Implementations
             }
         }
 
-        public async Task<CommandViewModel> GetCommand(DateTime date)
+        public async Task<Command> GetCommand(DateTime date)
         {
-            CommandViewModel command = null;
+            Command command = null;
 
             using (var client = new HttpClient())
             {
@@ -55,12 +54,12 @@ namespace PapaciccioPhone.DataAccessLayer.Implementations
             return command;
         }
 
-        public Task<CommandViewModel> AddOrder(Order order, CommandViewModel command)
+        public Task<Command> AddOrder(Order order, Command command)
         {
             throw new NotImplementedException();
         }
 
-        public Task<bool> DeleteCommand(CommandViewModel command)
+        public Task<bool> DeleteCommand(Command command)
         {
             throw new NotImplementedException();
         }

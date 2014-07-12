@@ -20,9 +20,6 @@
         <m3:DefaultTile Wide310x150Logo="Assets\StoreImages\WideLogo.png" Square71x71Logo="Assets\StoreImages\Square71x71Logo.png">
         </m3:DefaultTile>
         <m3:SplashScreen Image="Assets\StoreImages\SplashScreen.png" />
-        <m3:InitialRotationPreference>
-          <m3:Rotation Preference="portrait" />
-        </m3:InitialRotationPreference>
       </m3:VisualElements>
     </Application>
   </Applications>

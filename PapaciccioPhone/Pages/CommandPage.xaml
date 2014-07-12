@@ -15,7 +15,22 @@
         <converters:DateTimeToRelativeStringConverter x:Key="DateTimeToRelativeStringConverter" />
         <converters:StringToCamelCaseString x:Key="StringToCamelCaseString" />
         <converters:StringToUpperStringConverter x:Key="StringToUpperStringConverter" />
-        <converters:StringToFirstCharConverter x:Key="StringToFirstCharConverter" />
+        <converters:BooleanConveter x:Key="BooleanToVisibilityConveter">
+            <converters:BooleanConveter.TrueValue>
+                <Visibility>Visible</Visibility>
+            </converters:BooleanConveter.TrueValue>
+            <converters:BooleanConveter.FalseValue>
+                <Visibility>Collapsed</Visibility>
+            </converters:BooleanConveter.FalseValue>
+        </converters:BooleanConveter>
+        <converters:BooleanConveter x:Key="BooleanToColorConveter">
+            <converters:BooleanConveter.TrueValue>
+                <x:Double>0.3</x:Double>
+            </converters:BooleanConveter.TrueValue>
+            <converters:BooleanConveter.FalseValue>
+                <x:Double>1</x:Double>
+            </converters:BooleanConveter.FalseValue>
+        </converters:BooleanConveter>
     </Page.Resources>
     
     <Grid>
@@ -34,65 +49,98 @@
         <StackPanel Grid.Row="0" Margin="19,0,0,0">
             <TextBlock Text="{StaticResource AppName}" Style="{ThemeResource TitleTextBlockStyle}" Margin="0,12,0,0"/>
             <TextBlock Margin="0,-6.5,0,26.5" 
-                       Text="{Binding Command.Date, Converter={StaticResource DateTimeToRelativeStringConverter}}"
+                       Text="{Binding CommandViewModel.Date, Converter={StaticResource DateTimeToRelativeStringConverter}}"
                        Style="{ThemeResource HeaderTextBlockStyle}" 
+                       TextLineBounds="Full"
                        CharacterSpacing="{ThemeResource PivotHeaderItemCharacterSpacing}" />
         </StackPanel>
 
         <Grid Grid.Row="1">
-            <ctrls:StrippedListView ItemsSource="{Binding Command.Orders}"
+            <ProgressRing Width="20" Height="20" 
+                          Foreground="White"
+                          Background="Transparent"
+                          Opacity="0.5"
+                          IsActive="{Binding Processing}" />
+            <ctrls:StrippedListView ItemsSource="{Binding CommandViewModel.OrderViewModels}"
+                                    IsItemClickEnabled="True"
+                                    ItemClick="ListViewBase_OnItemClick"
                                     Colors="{Binding Colors, ElementName=RootPage}">
                 <ctrls:StrippedListView.ItemContainerStyle>
                     <Style TargetType="ListViewItem">
                         <Setter Property="HorizontalContentAlignment" Value="Stretch" />
                     </Style>
                 </ctrls:StrippedListView.ItemContainerStyle>
+                
+                <ctrls:StrippedListView.Header>
+                    <ItemsControl Margin="20,0,20,50" ItemsSource="{Binding CommandViewModel.Recap}"
+                                  Visibility="{Binding Path=IsChecked, ElementName=RecapToggleButton, Converter={StaticResource BooleanToVisibilityConveter}}">
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate>
+                                <TextBlock Style="{StaticResource ListViewItemTextBlockStyle}">
+                                    <Run Text="{Binding Name}" />
+                                    <Run Text=" x" />
+                                    <Run Text="{Binding Value}" />
+                                </TextBlock>
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                    </ItemsControl>
+                </ctrls:StrippedListView.Header>
+                
                 <ctrls:StrippedListView.ItemTemplate>
                     <DataTemplate>
-                        <StackPanel Margin="20">
-                            <Grid>
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="Auto" />
-                                    <ColumnDefinition Width="*" />
-                                </Grid.ColumnDefinitions>
-                                <TextBlock Grid.Column="0" Style="{StaticResource ListViewItemTextBlockStyle}">
-                                    <Run Text="{Binding Size, Converter={StaticResource StringToUpperStringConverter}}" /> 
-                                    <Run Text="{Binding Pasta, Converter={StaticResource StringToCamelCaseString}}" />
-                                </TextBlock>
+                        <Grid Margin="20">
+                            <StackPanel Opacity="{Binding Checked, Converter={StaticResource BooleanToColorConveter}}">
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="Auto" />
+                                        <ColumnDefinition Width="*" />
+                                    </Grid.ColumnDefinitions>
+                                    <TextBlock Grid.Column="0" Style="{StaticResource ListViewItemTextBlockStyle}">
+                                    <Run Text="{Binding Order.Size, Converter={StaticResource StringToUpperStringConverter}}" /> 
+                                    <Run Text="{Binding Order.Pasta, Converter={StaticResource StringToCamelCaseString}}" />
+                                    </TextBlock>
 
-                                <TextBlock Grid.Column="1" 
-                                           Text="{Binding Name}" 
+                                    <TextBlock Grid.Column="1" 
+                                           Text="{Binding Order.Name}" 
                                            VerticalAlignment="Center"
                                            MaxLines="2"
                                            TextTrimming="CharacterEllipsis"
                                            Margin="20,0,0,0"
-                                           Style="{StaticResource ListViewItemTextBlockStyle}"
-                                           Opacity="0.5"/>
-                            </Grid>
+                                           Style="{StaticResource ListViewEmptyStaticTextBlockStyle}"/>
+                                </Grid>
 
-                            <Grid>
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="0.8*" />
-                                    <ColumnDefinition Width="0.2*" />
-                                </Grid.ColumnDefinitions>
-                                
-                                <ItemsControl Grid.Column="0" ItemsSource="{Binding Sauces}">
-                                    <ItemsControl.ItemTemplate>
-                                        <DataTemplate>
-                                            <TextBlock Style="{StaticResource ListViewItemContentTextBlockStyle}" 
-                                                   Text="{Binding Converter={StaticResource StringToCamelCaseString}}" 
-                                                   TextWrapping="Wrap"/>
-                                        </DataTemplate>
-                                    </ItemsControl.ItemTemplate>
-                                </ItemsControl>
-                                
-                                <TextBlock Grid.Column="1" 
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="*" />
+                                        <ColumnDefinition Width="Auto" />
+                                    </Grid.ColumnDefinitions>
+
+                                    <ItemsControl Grid.Column="0" ItemsSource="{Binding Order.Sauces}">
+                                        <ItemsControl.ItemTemplate>
+                                            <DataTemplate>
+                                                <TextBlock Style="{StaticResource ListViewItemContentTextBlockStyle}" 
+                                                       Text="{Binding Converter={StaticResource StringToCamelCaseString}}" 
+                                                       TextWrapping="Wrap"/>
+                                            </DataTemplate>
+                                        </ItemsControl.ItemTemplate>
+                                    </ItemsControl>
+
+                                    <TextBlock Grid.Column="1" 
                                            TextWrapping="Wrap"
                                            TextAlignment="Center" 
                                            Style="{StaticResource ListViewItemTextBlockStyle}"
                                            Text="{Binding ToppingsAbbreviation}" />
-                            </Grid>
-                        </StackPanel>
+                                </Grid>
+                            </StackPanel>
+                            
+                            <TextBlock VerticalAlignment="Center" 
+                                       HorizontalAlignment="Center"
+                                       FontFamily="Segoe UI Symbol" 
+                                       Text="&#xE10B;"
+                                       FontSize="50"
+                                       Visibility="{Binding Checked, Converter={StaticResource BooleanToVisibilityConveter}}" />
+                        </Grid>
+
                     </DataTemplate>
                 </ctrls:StrippedListView.ItemTemplate>
             </ctrls:StrippedListView>
@@ -106,7 +154,11 @@
             </CommandBar.PrimaryCommands>
             
             <CommandBar.SecondaryCommands>
-                <AppBarButton Icon="AllApps" Label="récap'" />
+                <AppBarToggleButton x:Name="RecapToggleButton" 
+                                    Icon="AllApps" 
+                                    Label="récap'"
+                                    IsThreeState="False"
+                                    IsChecked="True"/>
             </CommandBar.SecondaryCommands>
         </CommandBar>
     </Page.BottomAppBar>

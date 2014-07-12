@@ -1,16 +1,15 @@
-﻿using System;
+﻿using PapaciccioPhone.Models;
+using System;
 using System.Threading.Tasks;
-using PapaciccioPhone.Models;
-using PapaciccioPhone.ViewModels;
 
 namespace PapaciccioPhone.DataAccessLayer.Interfaces
 {
     public interface ICommandRepository
     {
-        Task<CommandViewModel> GetCommand(DateTime date);
+        Task<Command> GetCommand(DateTime date);
 
-        Task<CommandViewModel> AddOrder(Order order, CommandViewModel command);
+        Task<Command> AddOrder(Order order, Command command);
 
-        Task<bool> DeleteCommand(CommandViewModel command);
+        Task<bool> DeleteCommand(Command command);
     }
 }

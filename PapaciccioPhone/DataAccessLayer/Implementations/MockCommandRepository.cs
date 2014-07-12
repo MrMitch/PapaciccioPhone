@@ -1,6 +1,5 @@
 ﻿using PapaciccioPhone.DataAccessLayer.Interfaces;
 using PapaciccioPhone.Models;
-using PapaciccioPhone.ViewModels;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -11,11 +10,11 @@ namespace PapaciccioPhone.DataAccessLayer.Implementations
     {
         #region ICommandRepository Membres
 
-        public async Task<CommandViewModel> GetCommand(DateTime date)
+        public async Task<Command> GetCommand(DateTime date)
         {
             await Task.Delay(2000);
 
-            return new CommandViewModel()
+            return new Command()
             {
                 Id = "1",
                 Timestamp = 140000000,
@@ -64,12 +63,12 @@ namespace PapaciccioPhone.DataAccessLayer.Implementations
             };
         }
 
-        public Task<CommandViewModel> AddOrder(Order order, CommandViewModel command)
+        public Task<Command> AddOrder(Order order, Command command)
         {
             throw new NotImplementedException();
         }
 
-        public Task<bool> DeleteCommand(CommandViewModel command)
+        public Task<bool> DeleteCommand(Command command)
         {
             throw new NotImplementedException();
         }
