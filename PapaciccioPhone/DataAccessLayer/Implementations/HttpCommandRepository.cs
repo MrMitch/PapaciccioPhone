@@ -1,12 +1,12 @@
-﻿using Windows.Storage;
-using Windows.Web.Http;
-using Newtonsoft.Json;
+﻿using Newtonsoft.Json;
 using PapaciccioPhone.DataAccessLayer.Interfaces;
-using System;
-using System.Threading.Tasks;
 using PapaciccioPhone.Models;
 using PapaciccioPhone.Models.ApiResponses;
 using PapaciccioPhone.ViewModels;
+using System;
+using System.Threading.Tasks;
+using Windows.Storage;
+using Windows.Web.Http;
 
 namespace PapaciccioPhone.DataAccessLayer.Implementations
 {
@@ -36,7 +36,7 @@ namespace PapaciccioPhone.DataAccessLayer.Implementations
                 {
                     json = await client.GetStringAsync(new Uri(String.Format("{0}/{1}/{2}", BaseAddress, "api/commands", date.ToString("yyyy-MM-dd"))));
                 }
-                catch (Exception e)
+                catch (Exception)
                 {
                     return null;
                 }

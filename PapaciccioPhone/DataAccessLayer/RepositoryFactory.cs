@@ -8,7 +8,11 @@ namespace PapaciccioPhone.DataAccessLayer
         private static ICommandRepository _commandRepository;
         public static ICommandRepository CommandRepository
         {
+#if DEBUG
+            get { return _commandRepository ?? (_commandRepository = new MockCommandRepository()); }
+#else
             get { return _commandRepository ?? (_commandRepository = new HttpCommandRepository()); }
+#endif
         }
         
     }
