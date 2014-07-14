@@ -1,10 +1,10 @@
-﻿using PapaciccioPhone.DataAccessLayer.Interfaces;
-using PapaciccioPhone.Models;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using PapaciccioPhone.DataAccessLayer.Interfaces;
+using PapaciccioPhone.Models;
 
-namespace PapaciccioPhone.DataAccessLayer.Implementations
+namespace PapaciccioPhone.DataAccessLayer.Implementations.Mock
 {
     public class MockCommandRepository : ICommandRepository
     {

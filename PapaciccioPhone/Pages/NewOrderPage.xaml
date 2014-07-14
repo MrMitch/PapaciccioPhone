@@ -1,0 +1,103 @@
+﻿<Page x:Name="RootPage"
+    x:Class="PapaciccioPhone.Pages.NewOrderPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:PapaciccioPhone.Pages"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d"
+    DataContext="{Binding ViewModel, RelativeSource={RelativeSource Self}}"
+    Background="{StaticResource PageBackgroundBrush}">
+
+    <Page.Resources>
+        <Style x:Key="SectionEndElementStyle" TargetType="FrameworkElement">
+            <Setter Property="Margin" Value="0,0,0,30" />
+        </Style>
+    </Page.Resources>
+    
+    <Grid x:Name="LayoutRoot">
+        <Grid.ChildrenTransitions>
+            <TransitionCollection>
+                <EntranceThemeTransition/>
+            </TransitionCollection>
+        </Grid.ChildrenTransitions>
+
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+
+        <!-- Panneau Titre -->
+        <StackPanel Grid.Row="0" Margin="19,0,0,0">
+            <TextBlock Text="{StaticResource AppName}" Style="{ThemeResource TitleTextBlockStyle}" Margin="0,12,0,0"/>
+            <TextBlock Text="commander" Margin="0,-6.5,0,10" Style="{ThemeResource HeaderTextBlockStyle}" CharacterSpacing="{ThemeResource PivotHeaderItemCharacterSpacing}"/>
+        </StackPanel>
+
+        
+        <Grid Grid.Row="1" x:Name="ContentRoot" Margin="19,9.5,19,0">
+            <ScrollViewer ZoomMode="Disabled"
+                          IsVerticalRailEnabled="True"
+                          VerticalScrollMode="Auto"
+                          VerticalScrollBarVisibility="Auto"
+                          IsVerticalScrollChainingEnabled="True">
+                <StackPanel>
+                    <!-- sizes + pasta -->
+                    <TextBlock Style="{StaticResource MessageDialogContentStyle}"
+                               Text="Choisissez votre variété de pâtes et la taille de votre menu."/>
+
+                    <ComboBox PlaceholderText="Pâtes" 
+                              SelectedItem="{Binding Pasta, Mode=TwoWay}"
+                              ItemsSource="{Binding AvailablePasta}"
+                              Background="Transparent"
+                              Foreground="White"/>
+                    
+                    <ComboBox PlaceholderText="Taille" 
+                              ItemsSource="{Binding AvailableSizes}"
+                              SelectedItem="{Binding Size, Mode=TwoWay}"
+                              Style="{StaticResource SectionEndElementStyle}"/>
+
+                    <!-- sauces -->
+
+                    <TextBlock Style="{StaticResource MessageDialogContentStyle}" 
+                               Text="Choisissez jusqu'à 3 sauces."/>
+                    <ListBox SelectionMode="Multiple"
+                             Background="Transparent"
+                             Foreground="White"
+                             SelectionChanged="PastaListBox_OnSelectionChanged"
+                             ScrollViewer.VerticalScrollBarVisibility="Disabled"
+                             ScrollViewer.VerticalScrollMode="Disabled"
+                             ScrollViewer.IsVerticalRailEnabled="False"
+                             ItemsSource="{Binding AvailableSauces}"
+                             Style="{StaticResource SectionEndElementStyle}">
+                        <ListBox.ItemTemplate>
+                            <DataTemplate>
+                                <TextBlock Text="{Binding}" FontSize="18"/>
+                            </DataTemplate>
+                        </ListBox.ItemTemplate>
+                    </ListBox>
+
+                    <TextBlock Style="{StaticResource MessageDialogContentStyle}"
+                               Text="Choisissez vos accompagnements."/>
+                    <!-- toppings -->
+                    <ListView SelectionMode="Multiple"
+                               MaxHeight="100"
+                               ItemsSource="{Binding AvailableToppings}">
+                        <ListView.ItemTemplate>
+                            <DataTemplate>
+                                <TextBlock Text="{Binding}" FontSize="18"/>
+                            </DataTemplate>
+                        </ListView.ItemTemplate>
+                    </ListView>
+
+                </StackPanel>
+            </ScrollViewer>
+        </Grid>
+    </Grid>
+    
+    <Page.BottomAppBar>
+        <CommandBar>
+            <AppBarButton Icon="Accept" Label="commander" />
+            <AppBarButton Icon="Cancel" Label="annuler" />
+        </CommandBar>
+    </Page.BottomAppBar>
+</Page>

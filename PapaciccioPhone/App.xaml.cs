@@ -1,4 +1,6 @@
 ﻿// Pour plus d'informations sur le modèle Application vide, consultez la page http://go.microsoft.com/fwlink/?LinkId=391641
+
+using Windows.Storage;
 using PapaciccioPhone.Pages;
 using System;
 using Windows.ApplicationModel;

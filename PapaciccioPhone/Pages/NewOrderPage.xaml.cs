@@ -1,22 +1,32 @@
-﻿using Windows.UI.Xaml;
-using Windows.UI.Xaml.Media;
+﻿using System.Diagnostics;
+using Windows.Storage;
 using PapaciccioPhone.Common;
-// Pour en savoir plus sur le modèle d'élément Page de base, consultez la page http://go.microsoft.com/fwlink/?LinkID=390556
-using PapaciccioPhone.Controls;
-using PapaciccioPhone.ViewModels;
 using System;
 using System.Collections.Generic;
-using Windows.UI;
-using Windows.UI.Popups;
+using System.IO;
+using System.Linq;
+using System.Runtime.InteropServices.WindowsRuntime;
+using Windows.Foundation;
+using Windows.Foundation.Collections;
+using Windows.Graphics.Display;
+using Windows.UI.ViewManagement;
+using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
+using Windows.UI.Xaml.Controls.Primitives;
+using Windows.UI.Xaml.Data;
+using Windows.UI.Xaml.Input;
+using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Navigation;
+
+// Pour en savoir plus sur le modèle d'élément Page de base, consultez la page http://go.microsoft.com/fwlink/?LinkID=390556
+using PapaciccioPhone.ViewModels;
 
 namespace PapaciccioPhone.Pages
 {
     /// <summary>
     /// Une page vide peut être utilisée seule ou constituer une page de destination au sein d'un frame.
     /// </summary>
-    public sealed partial class CommandPage : Page
+    public sealed partial class NewOrderPage : Page
     {
         /// <summary>
         /// Obtient le <see cref="NavigationHelper"/> associé à ce <see cref="Page"/>.
@@ -27,26 +37,23 @@ namespace PapaciccioPhone.Pages
             get { return this.navigationHelper; }
         }
 
-        public CommandPageViewModel ViewModel { get; set; }
+        public NewOrderPageViewModel ViewModel { get; set; }
 
-        public List<Color> Colors { get; set; }
+        //private TranslateTransform _pastFlipViewTranslateTransform = new TranslateTransform();
 
-        public CommandPage()
+        public NewOrderPage()
         {
-            ViewModel = new CommandPageViewModel();
-            Colors = new List<Color>()
-            {
-                Color.FromArgb(45,255,255,255),
-                Windows.UI.Colors.Transparent
-            };
-            
+            ViewModel = new NewOrderPageViewModel();
             this.InitializeComponent();
 
             this.navigationHelper = new NavigationHelper(this);
             this.navigationHelper.LoadState += this.NavigationHelper_LoadState;
             this.navigationHelper.SaveState += this.NavigationHelper_SaveState;
+
+            //PastaFlipView.RenderTransform = _pastFlipViewTranslateTransform;
         }
-        
+
+
         /// <summary>
         /// Remplit la page à l'aide du contenu passé lors de la navigation. Tout état enregistré est également
         /// fourni lorsqu'une page est recréée à partir d'une session antérieure.
@@ -60,21 +67,13 @@ namespace PapaciccioPhone.Pages
         /// antérieure.  L'état n'aura pas la valeur Null lors de la première visite de la page.</param>
         private async void NavigationHelper_LoadState(object sender, LoadStateEventArgs e)
         {
-            var commandDate = (DateTime) (e.NavigationParameter ?? e.PageState["date"]);
-            var command = await ViewModel.GetCommand(commandDate);
-            
-            if (command != null)
+            await ViewModel.FetchApiData();
+            var lastOrder = await ViewModel.GetLastOrder();
+
+            if (lastOrder != null)
             {
-                ViewModel.CommandViewModel = command;
-            }
-            else
-            {
-                if (commandDate != DateTime.Now)
-                {
-                    var msg = new MessageDialog("Pas de commande pour cette date", "Oops");
-                    msg.Commands.Add(new UICommand("Ok", uiCommand => Frame.Navigate(typeof (CommandPage), DateTime.Now)));
-                    await msg.ShowAsync();
-                }
+                ViewModel.Pasta = lastOrder.Pasta;
+                ViewModel.Size = lastOrder.Size;
             }
         }
 
@@ -88,7 +87,7 @@ namespace PapaciccioPhone.Pages
         /// état sérialisable.</param>
         private void NavigationHelper_SaveState(object sender, SaveStateEventArgs e)
         {
-            e.PageState["date"] = ViewModel.CommandViewModel.Date;
+            
         }
 
         #region Inscription de NavigationHelper
@@ -118,18 +117,46 @@ namespace PapaciccioPhone.Pages
 
         #endregion
 
-        private void ListViewBase_OnItemClick(object sender, ItemClickEventArgs e)
+        private void PastaListBox_OnSelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            var order = e.ClickedItem as OrderViewModel;
-            order.Checked = !order.Checked;
+            var listbox = sender as ListBox;
+
+            if (listbox.SelectedItems.Count > 3)
+            {
+                foreach (var addedItem in e.AddedItems)
+                {
+                    listbox.SelectedItems.Remove(addedItem);
+                }
+            }
         }
 
-        private void RecapToggleButton_OnChecked(object sender, RoutedEventArgs e)
-        {
-            var border = VisualTreeHelper.GetChild(OrdersListView, 0);
-            var scrollViewer = VisualTreeHelper.GetChild(border, 0) as ScrollViewer;
+        //private void PastaFlipView_OnManipulationDelta(object sender, ManipulationDeltaRoutedEventArgs e)
+        //{
+        //    if (Math.Abs(e.Delta.Translation.X) < Math.Abs(e.Delta.Translation.Y))
+        //    {
+        //        _pastFlipViewTranslateTransform.Y += e.Delta.Translation.Y; //Position.Y;
+        //    }
+        //    else if (Math.Abs(e.Delta.Translation.X) > 20)
+        //    {
+        //        if (e.Delta.Translation.X < 0)
+        //        {
+        //            if (PastaFlipView.SelectedIndex < ViewModel.AvailablePasta.Count - 1)
+        //            {
+        //                PastaFlipView.SelectedIndex++;
+        //            }
+        //        }
+        //        else
+        //        {
+        //            if (PastaFlipView.SelectedIndex > 0)
+        //            {
+        //                PastaFlipView.SelectedIndex--;
+        //            }                    
+        //        }
+        //        //e.Handled = true;
+        //    }
 
-            scrollViewer.ChangeView(0, 0, null, false);
-        }
+        //    //Debug.WriteLine("Translation: {0}{1}", e.Delta.Translation.X, e.Delta.Translation.Y);            
+        //    //Debug.WriteLine("Position: {0}{1}", e.Position.X, e.Position.Y);            
+        //}
     }
 }
