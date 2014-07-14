@@ -29,16 +29,21 @@ namespace PapaciccioPhone.Pages
 
         public CommandPageViewModel ViewModel { get; set; }
 
-        public List<Color> Colors { get; set; }
+        private List<Color> _colors = new List<Color>()
+        {
+            Color.FromArgb(45,255,255,255),
+            Windows.UI.Colors.Transparent
+        };
+
+        public List<Color> Colors
+        {
+            get { return _colors; }
+            set { _colors = value; }
+        }
 
         public CommandPage()
         {
             ViewModel = new CommandPageViewModel();
-            Colors = new List<Color>()
-            {
-                Color.FromArgb(45,255,255,255),
-                Windows.UI.Colors.Transparent
-            };
             
             this.InitializeComponent();
 
@@ -88,7 +93,10 @@ namespace PapaciccioPhone.Pages
         /// état sérialisable.</param>
         private void NavigationHelper_SaveState(object sender, SaveStateEventArgs e)
         {
-            e.PageState["date"] = ViewModel.CommandViewModel.Date;
+            if (ViewModel.CommandViewModel != null)
+            {
+                e.PageState["date"] = ViewModel.CommandViewModel.Date;                
+            }
         }
 
         #region Inscription de NavigationHelper

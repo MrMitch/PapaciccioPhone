@@ -8,7 +8,7 @@ namespace PapaciccioPhone.DataAccessLayer.Interfaces
     {
         Task<Command> GetCommand(DateTime date);
 
-        Task<Command> AddOrder(Order order, Command command);
+        Task<bool> AddOrder(Order order, DateTime date);
 
         Task<bool> DeleteCommand(Command command);
     }

@@ -96,7 +96,7 @@ namespace PapaciccioPhone
                 else
                 {
                     destinationPageType = typeof (CommandPage);
-                    args = new DateTime(2014, 07, 10); //DateTime.Now;
+                    args = DateTime.Now;
                 }
 #endif
 

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using Windows.Storage;
 using Newtonsoft.Json;
+using PapaciccioPhone.Common;
 using PapaciccioPhone.DataAccessLayer;
 using PapaciccioPhone.Models;
 
@@ -74,6 +75,8 @@ namespace PapaciccioPhone.ViewModels
             set { SetValue(ref _toppings, value); }
         }
 
+        public RelayCommand SubmitOrderCommand { get; set; }
+
         public Order Order { get; set; }
 
         public async Task FetchApiData()
@@ -96,16 +99,41 @@ namespace PapaciccioPhone.ViewModels
 
         public async Task SaveOrder(Order order)
         {
-            var jsonFile = await StorageFile.GetFileFromApplicationUriAsync(new Uri("ms-appx:///Assets/lastOrder.json"));
+            var jsonFile = await ApplicationData.Current.LocalFolder.CreateFileAsync("lastOrder.json", CreationCollisionOption.ReplaceExisting);
             await FileIO.WriteTextAsync(jsonFile, JsonConvert.SerializeObject(order));
         }
 
-        public  async Task<Order> GetLastOrder()
+        public async Task<Order> GetLastOrder()
         {
-            var jsonFile = await StorageFile.GetFileFromApplicationUriAsync(new Uri("ms-appx:///Assets/lastOrder.json"));
-            var json = await FileIO.ReadTextAsync(jsonFile);
+            try
+            {
+                var jsonFile = await ApplicationData.Current.LocalFolder.GetFileAsync("lastOrder.json");
+                var json = await FileIO.ReadTextAsync(jsonFile);
 
-            return JsonConvert.DeserializeObject<Order>(json);
+                return JsonConvert.DeserializeObject<Order>(json);
+            }
+            catch (Exception)
+            {
+                return null;
+            }
+        }
+
+        public async Task<bool> SubmitOrder(Order order)
+        {
+            Processing = true;
+
+            try
+            {
+                var status = await RepositoryFactory.CommandRepository.AddOrder(order, DateTime.Now);
+                Processing = false;
+                
+                return status;
+            }
+            catch (Exception)
+            {
+                Processing = false;
+                return false;
+            }
         }
     }
 }

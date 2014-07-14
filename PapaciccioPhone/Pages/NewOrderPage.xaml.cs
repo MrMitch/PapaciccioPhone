@@ -1,5 +1,6 @@
 ﻿using System.Diagnostics;
 using Windows.Storage;
+using Windows.UI.Popups;
 using PapaciccioPhone.Common;
 using System;
 using System.Collections.Generic;
@@ -19,6 +20,7 @@ using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Navigation;
 
 // Pour en savoir plus sur le modèle d'élément Page de base, consultez la page http://go.microsoft.com/fwlink/?LinkID=390556
+using PapaciccioPhone.Models;
 using PapaciccioPhone.ViewModels;
 
 namespace PapaciccioPhone.Pages
@@ -43,7 +45,34 @@ namespace PapaciccioPhone.Pages
 
         public NewOrderPage()
         {
-            ViewModel = new NewOrderPageViewModel();
+            ViewModel = new NewOrderPageViewModel()
+            {
+                SubmitOrderCommand = new RelayCommand(async () =>
+                {
+                    var order = new Order()
+                    {
+                        Pasta = ViewModel.Pasta,
+                        Size = ViewModel.Size, 
+                        Sauces = SaucesListBox.SelectedItems.Cast<string>().ToList(),
+                        Toppings = ToppingsListView.SelectedItems.Cast<string>().ToList()
+                    };
+
+                    var success = await ViewModel.SubmitOrder(order);
+
+                    if (success)
+                    {
+                        await ViewModel.SaveOrder(order);
+                        NavigationHelper.GoBack();
+                    }
+                    else
+                    {
+                        var msg = new MessageDialog("La commande n'a pas pu être enregistrée", "Erreur");
+                        msg.Commands.Add(new UICommand("OK", command => NavigationHelper.GoBack()));
+
+                        await msg.ShowAsync();
+                    }
+                })
+            };
             this.InitializeComponent();
 
             this.navigationHelper = new NavigationHelper(this);

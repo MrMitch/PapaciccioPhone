@@ -4,7 +4,7 @@ using Windows.UI.Xaml.Data;
 
 namespace PapaciccioPhone.Converters
 {
-    public class BooleanConveter : IValueConverter
+    public class BooleanConverter : IValueConverter
     {
         public object TrueValue { get; set; }
         public object FalseValue { get; set; }

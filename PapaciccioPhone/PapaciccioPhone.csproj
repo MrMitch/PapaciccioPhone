@@ -22,7 +22,7 @@
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
     <OutputPath>bin\Debug\</OutputPath>
-    <DefineConstants>DEBUG;TRACE;NETFX_CORE;WINDOWS_PHONE_APP</DefineConstants>
+    <DefineConstants>TRACE;NETFX_CORE;WINDOWS_PHONE_APP</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
@@ -91,7 +91,7 @@
       <DependentUpon>SettingsDialog.xaml</DependentUpon>
     </Compile>
     <Compile Include="Controls\StrippedListView.cs" />
-    <Compile Include="Converters\BooleanConveter.cs" />
+    <Compile Include="Converters\BooleanConverter.cs" />
     <Compile Include="Converters\DateTimeToRelativeStringConverter.cs" />
     <Compile Include="Converters\StringToCamelCaseString.cs" />
     <Compile Include="Converters\StringToFirstCharConverter.cs" />

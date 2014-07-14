@@ -63,7 +63,7 @@ namespace PapaciccioPhone.DataAccessLayer.Implementations.Mock
             };
         }
 
-        public Task<Command> AddOrder(Order order, Command command)
+        public Task<bool> AddOrder(Order order, DateTime date)
         {
             throw new NotImplementedException();
         }

@@ -18,30 +18,30 @@
         <converters:DateTimeToRelativeStringConverter x:Key="DateTimeToRelativeStringConverter" />
         <converters:StringToCamelCaseString x:Key="StringToCamelCaseString" />
         <converters:StringToUpperStringConverter x:Key="StringToUpperStringConverter" />
-        <converters:BooleanConveter x:Key="BooleanToVisibilityConveter">
-            <converters:BooleanConveter.TrueValue>
+        <converters:BooleanConverter x:Key="BooleanToVisibilityConveter">
+            <converters:BooleanConverter.TrueValue>
                 <Visibility>Visible</Visibility>
-            </converters:BooleanConveter.TrueValue>
-            <converters:BooleanConveter.FalseValue>
+            </converters:BooleanConverter.TrueValue>
+            <converters:BooleanConverter.FalseValue>
                 <Visibility>Collapsed</Visibility>
-            </converters:BooleanConveter.FalseValue>
-        </converters:BooleanConveter>
-        <converters:BooleanConveter x:Key="BooleanToColorConveter">
-            <converters:BooleanConveter.TrueValue>
+            </converters:BooleanConverter.FalseValue>
+        </converters:BooleanConverter>
+        <converters:BooleanConverter x:Key="BooleanToColorConveter">
+            <converters:BooleanConverter.TrueValue>
                 <x:Double>0.3</x:Double>
-            </converters:BooleanConveter.TrueValue>
-            <converters:BooleanConveter.FalseValue>
+            </converters:BooleanConverter.TrueValue>
+            <converters:BooleanConverter.FalseValue>
                 <x:Double>1</x:Double>
-            </converters:BooleanConveter.FalseValue>
-        </converters:BooleanConveter>
-        <converters:BooleanConveter x:Key="BooleanToInversedBooleanConveter">
-            <converters:BooleanConveter.TrueValue>
+            </converters:BooleanConverter.FalseValue>
+        </converters:BooleanConverter>
+        <converters:BooleanConverter x:Key="BooleanToInversedBooleanConveter">
+            <converters:BooleanConverter.TrueValue>
                 <x:Boolean>False</x:Boolean>
-            </converters:BooleanConveter.TrueValue>
-            <converters:BooleanConveter.FalseValue>
+            </converters:BooleanConverter.TrueValue>
+            <converters:BooleanConverter.FalseValue>
                 <x:Boolean>True</x:Boolean>
-            </converters:BooleanConveter.FalseValue>
-        </converters:BooleanConveter>
+            </converters:BooleanConverter.FalseValue>
+        </converters:BooleanConverter>
     </Page.Resources>
 
     <Grid>

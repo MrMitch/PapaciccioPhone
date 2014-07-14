@@ -5,6 +5,7 @@
     xmlns:local="using:PapaciccioPhone.Pages"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:converters="using:PapaciccioPhone.Converters"
     mc:Ignorable="d"
     DataContext="{Binding ViewModel, RelativeSource={RelativeSource Self}}"
     Background="{StaticResource PageBackgroundBrush}">
@@ -13,6 +14,34 @@
         <Style x:Key="SectionEndElementStyle" TargetType="FrameworkElement">
             <Setter Property="Margin" Value="0,0,0,30" />
         </Style>
+
+        <converters:BooleanConverter x:Key="BooleanToInversedBooleanConverter">
+            <converters:BooleanConverter.TrueValue>
+                <x:Boolean>False</x:Boolean>
+            </converters:BooleanConverter.TrueValue>
+            <converters:BooleanConverter.FalseValue>
+                <x:Boolean>True</x:Boolean>
+            </converters:BooleanConverter.FalseValue>
+        </converters:BooleanConverter>
+
+        <converters:BooleanConverter x:Key="BooleanToVisibilityConverter">
+            <converters:BooleanConverter.TrueValue>
+                <Visibility>Visible</Visibility>
+            </converters:BooleanConverter.TrueValue>
+            <converters:BooleanConverter.FalseValue>
+                <Visibility>Collapsed</Visibility>
+            </converters:BooleanConverter.FalseValue>
+        </converters:BooleanConverter>
+
+        
+        <converters:BooleanConverter x:Key="OpposedBooleanToVisibilityConverter">
+            <converters:BooleanConverter.TrueValue>
+                <Visibility>Collapsed</Visibility>
+            </converters:BooleanConverter.TrueValue>
+            <converters:BooleanConverter.FalseValue>
+                <Visibility>Visible</Visibility>
+            </converters:BooleanConverter.FalseValue>
+        </converters:BooleanConverter>
     </Page.Resources>
     
     <Grid x:Name="LayoutRoot">
@@ -35,7 +64,8 @@
 
         
         <Grid Grid.Row="1" x:Name="ContentRoot" Margin="19,9.5,19,0">
-            <ScrollViewer ZoomMode="Disabled"
+            <ScrollViewer ZoomMode="Disabled" 
+                          Visibility="{Binding Processing, Converter={StaticResource OpposedBooleanToVisibilityConverter}}"
                           IsVerticalRailEnabled="True"
                           VerticalScrollMode="Auto"
                           VerticalScrollBarVisibility="Auto"
@@ -57,10 +87,10 @@
                               Style="{StaticResource SectionEndElementStyle}"/>
 
                     <!-- sauces -->
-
                     <TextBlock Style="{StaticResource MessageDialogContentStyle}" 
                                Text="Choisissez jusqu'à 3 sauces."/>
-                    <ListBox SelectionMode="Multiple"
+                    <ListBox x:Name="SaucesListBox" 
+                             SelectionMode="Multiple"
                              Background="Transparent"
                              Foreground="White"
                              SelectionChanged="PastaListBox_OnSelectionChanged"
@@ -79,9 +109,10 @@
                     <TextBlock Style="{StaticResource MessageDialogContentStyle}"
                                Text="Choisissez vos accompagnements."/>
                     <!-- toppings -->
-                    <ListView SelectionMode="Multiple"
-                               MaxHeight="100"
-                               ItemsSource="{Binding AvailableToppings}">
+                    <ListView x:Name="ToppingsListView" 
+                              SelectionMode="Multiple"
+                              MaxHeight="100"
+                              ItemsSource="{Binding AvailableToppings}">
                         <ListView.ItemTemplate>
                             <DataTemplate>
                                 <TextBlock Text="{Binding}" FontSize="18"/>
@@ -91,12 +122,22 @@
 
                 </StackPanel>
             </ScrollViewer>
+            
+            <ProgressRing VerticalAlignment="Center"
+                          HorizontalAlignment="Center"
+                          Foreground="White"
+                          IsActive="{Binding Processing}"
+                          Background="Transparent"
+                          Visibility="{Binding Processing, Converter={StaticResource BooleanToVisibilityConverter}}"
+                          Opacity="0.5"
+                          Height="20"
+                          Width="20"/>
         </Grid>
     </Grid>
     
     <Page.BottomAppBar>
-        <CommandBar>
-            <AppBarButton Icon="Accept" Label="commander" />
+        <CommandBar IsEnabled="{Binding Processing, Converter={StaticResource BooleanToInversedBooleanConverter}}">
+            <AppBarButton Icon="Accept" Label="commander" Command="{Binding SubmitOrderCommand}" />
             <AppBarButton Icon="Cancel" Label="annuler" />
         </CommandBar>
     </Page.BottomAppBar>

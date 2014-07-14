@@ -27,6 +27,12 @@ namespace PapaciccioPhone.ViewModels
         {
             Processing = true;
             var command = await RepositoryFactory.CommandRepository.GetCommand(commandDate);
+
+            if (command == null)
+            {
+                return null;
+            }
+
             var vm = new CommandViewModel()
             {
                 Command = command,
