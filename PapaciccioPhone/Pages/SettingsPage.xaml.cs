@@ -5,6 +5,7 @@ using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
+using Windows.Storage;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Controls.Primitives;
@@ -23,20 +24,19 @@ namespace PapaciccioPhone.Pages
     /// <summary>
     /// Une page vide peut être utilisée seule ou constituer une page de destination au sein d'un frame.
     /// </summary>
-    public sealed partial class FirstLaunchPage : Page
+    public sealed partial class SettingsPage : Page
     {
-        public FirstLaunchPageViewModel ViewModel { get; set; }
+        public SettingsPageViewModel ViewModel { get; set; }
 
-        public FirstLaunchPage()
+        public SettingsPage()
         {
-            ViewModel = new FirstLaunchPageViewModel();
+            ViewModel = new SettingsPageViewModel()
+            {
+                Name = ApplicationData.Current.LocalSettings.Values["name"] as string,
+                ServerAddress = ApplicationData.Current.RoamingSettings.Values["serverAddress"] as string ?? "papaciccio.appsdeck.eu"
+            };
+
             this.InitializeComponent();
-        }
-
-        protected override void OnNavigatedTo(NavigationEventArgs e)
-        {
-            base.OnNavigatedTo(e);
-            ViewModel.Frame = Frame;
         }
     }
 }

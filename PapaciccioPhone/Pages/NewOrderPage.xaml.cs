@@ -1,22 +1,8 @@
-﻿using System.Diagnostics;
-using Windows.Storage;
-using Windows.UI.Popups;
+﻿using Windows.UI.Popups;
 using PapaciccioPhone.Common;
 using System;
-using System.Collections.Generic;
-using System.IO;
 using System.Linq;
-using System.Runtime.InteropServices.WindowsRuntime;
-using Windows.Foundation;
-using Windows.Foundation.Collections;
-using Windows.Graphics.Display;
-using Windows.UI.ViewManagement;
-using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
-using Windows.UI.Xaml.Controls.Primitives;
-using Windows.UI.Xaml.Data;
-using Windows.UI.Xaml.Input;
-using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Navigation;
 
 // Pour en savoir plus sur le modèle d'élément Page de base, consultez la page http://go.microsoft.com/fwlink/?LinkID=390556
@@ -62,24 +48,23 @@ namespace PapaciccioPhone.Pages
                     if (success)
                     {
                         await ViewModel.SaveOrder(order);
-                        NavigationHelper.GoBack();
+                        NavigationService.GoBack();
                     }
                     else
                     {
                         var msg = new MessageDialog("La commande n'a pas pu être enregistrée", "Erreur");
-                        msg.Commands.Add(new UICommand("OK", command => NavigationHelper.GoBack()));
+                        msg.Commands.Add(new UICommand("OK", command => NavigationService.GoBack()));
 
                         await msg.ShowAsync();
                     }
                 })
             };
+
             this.InitializeComponent();
 
             this.navigationHelper = new NavigationHelper(this);
             this.navigationHelper.LoadState += this.NavigationHelper_LoadState;
             this.navigationHelper.SaveState += this.NavigationHelper_SaveState;
-
-            //PastaFlipView.RenderTransform = _pastFlipViewTranslateTransform;
         }
 
 
@@ -103,6 +88,27 @@ namespace PapaciccioPhone.Pages
             {
                 ViewModel.Pasta = lastOrder.Pasta;
                 ViewModel.Size = lastOrder.Size;
+
+
+                if (lastOrder.Sauces != null)
+                {
+                    var sauces = ViewModel.AvailableSauces.FindAll(s => lastOrder.Sauces.Contains(s));
+
+                    foreach (var sauce in sauces)
+                    {
+                        SaucesListBox.SelectedItems.Add(sauce);
+                    } 
+                }
+
+                if (lastOrder.Toppings != null)
+                {
+                    var toppings = ViewModel.AvailableToppings.FindAll(t => lastOrder.Toppings.Contains(t));
+
+                    foreach (var topping in toppings)
+                    {
+                        ToppingsListView.SelectedItems.Add(topping);
+                    }
+                }
             }
         }
 
@@ -158,34 +164,5 @@ namespace PapaciccioPhone.Pages
                 }
             }
         }
-
-        //private void PastaFlipView_OnManipulationDelta(object sender, ManipulationDeltaRoutedEventArgs e)
-        //{
-        //    if (Math.Abs(e.Delta.Translation.X) < Math.Abs(e.Delta.Translation.Y))
-        //    {
-        //        _pastFlipViewTranslateTransform.Y += e.Delta.Translation.Y; //Position.Y;
-        //    }
-        //    else if (Math.Abs(e.Delta.Translation.X) > 20)
-        //    {
-        //        if (e.Delta.Translation.X < 0)
-        //        {
-        //            if (PastaFlipView.SelectedIndex < ViewModel.AvailablePasta.Count - 1)
-        //            {
-        //                PastaFlipView.SelectedIndex++;
-        //            }
-        //        }
-        //        else
-        //        {
-        //            if (PastaFlipView.SelectedIndex > 0)
-        //            {
-        //                PastaFlipView.SelectedIndex--;
-        //            }                    
-        //        }
-        //        //e.Handled = true;
-        //    }
-
-        //    //Debug.WriteLine("Translation: {0}{1}", e.Delta.Translation.X, e.Delta.Translation.Y);            
-        //    //Debug.WriteLine("Position: {0}{1}", e.Position.X, e.Position.Y);            
-        //}
     }
 }

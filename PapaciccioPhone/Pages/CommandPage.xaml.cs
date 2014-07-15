@@ -1,4 +1,5 @@
-﻿using Windows.UI.Xaml;
+﻿using System.Threading.Tasks;
+using Windows.UI.Xaml;
 using Windows.UI.Xaml.Media;
 using PapaciccioPhone.Common;
 // Pour en savoir plus sur le modèle d'élément Page de base, consultez la page http://go.microsoft.com/fwlink/?LinkID=390556
@@ -66,8 +67,13 @@ namespace PapaciccioPhone.Pages
         private async void NavigationHelper_LoadState(object sender, LoadStateEventArgs e)
         {
             var commandDate = (DateTime) (e.NavigationParameter ?? e.PageState["date"]);
+            await RefreshCommand(commandDate);
+        }
+
+        private async Task RefreshCommand(DateTime commandDate)
+        {
             var command = await ViewModel.GetCommand(commandDate);
-            
+
             if (command != null)
             {
                 ViewModel.CommandViewModel = command;
@@ -77,9 +83,14 @@ namespace PapaciccioPhone.Pages
                 if (commandDate.Date != DateTime.Today)
                 {
                     var msg = new MessageDialog("Pas de commande pour cette date", "Oops");
-                    msg.Commands.Add(new UICommand("Ok", uiCommand => Frame.Navigate(typeof (CommandPage), DateTime.Now)));
+                    msg.Commands.Add(new UICommand("Ok", uiCommand => Frame.Navigate(typeof(CommandPage), DateTime.Now)));
                     await msg.ShowAsync();
                 }
+            }
+
+            if (ViewModel.CommandViewModel == null || ViewModel.CommandViewModel.OrderViewModels.Count == 0)
+            {
+                VisualStateManager.GoToState(RootPage, "NoOrderVisualState", true);
             }
         }
 
@@ -138,6 +149,11 @@ namespace PapaciccioPhone.Pages
             var scrollViewer = VisualTreeHelper.GetChild(border, 0) as ScrollViewer;
 
             scrollViewer.ChangeView(0, 0, null, false);
+        }
+
+        private async void RefreshButton_OnClick(object sender, RoutedEventArgs e)
+        {
+            await RefreshCommand(ViewModel.CommandViewModel.Date);
         }
     }
 }

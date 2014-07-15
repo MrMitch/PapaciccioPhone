@@ -77,6 +77,20 @@ namespace PapaciccioPhone.ViewModels
 
         public RelayCommand SubmitOrderCommand { get; set; }
 
+        private RelayCommand _cancelCommand;
+        public RelayCommand CancelCommand
+        {
+            get
+            {
+                if (_cancelCommand == null)
+                {
+                    _cancelCommand = new RelayCommand(NavigationService.GoBack);
+                }
+                return _cancelCommand;
+            }
+        }
+
+
         public Order Order { get; set; }
 
         public async Task FetchApiData()
@@ -124,7 +138,8 @@ namespace PapaciccioPhone.ViewModels
 
             try
             {
-                var status = await RepositoryFactory.CommandRepository.AddOrder(order, DateTime.Now);
+                order.Name = ApplicationData.Current.LocalSettings.Values["name"] as string;
+                var status = await RepositoryFactory.CommandRepository.AddOrder(order, DateTime.Today);
                 Processing = false;
                 
                 return status;

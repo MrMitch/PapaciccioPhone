@@ -16,8 +16,8 @@
 
     <Page.Resources>
         <converters:DateTimeToRelativeStringConverter x:Key="DateTimeToRelativeStringConverter" />
-        <converters:StringToCamelCaseString x:Key="StringToCamelCaseString" />
         <converters:StringToUpperStringConverter x:Key="StringToUpperStringConverter" />
+        <converters:StringToCamelCaseString x:Key="StringToCamelCaseString" />
         <converters:BooleanConverter x:Key="BooleanToVisibilityConveter">
             <converters:BooleanConverter.TrueValue>
                 <Visibility>Visible</Visibility>
@@ -44,135 +44,173 @@
         </converters:BooleanConverter>
     </Page.Resources>
 
-    <Grid>
-		<Grid.ChildrenTransitions>
-			<TransitionCollection>
-				<EntranceThemeTransition/>
-			</TransitionCollection>
-		</Grid.ChildrenTransitions>
+    <Grid x:Name="ContentGrid">
+        <VisualStateManager.VisualStateGroups>
+            <VisualStateGroup x:Name="Default">
+                <VisualState x:Name="DefaultVisualState" />
+                <VisualState x:Name="NoOrderVisualState">
+                    <Storyboard>
+                        <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.Visibility)" Storyboard.TargetName="ProgressRing">
+                            <DiscreteObjectKeyFrame KeyTime="0">
+                                <DiscreteObjectKeyFrame.Value>
+                                    <Visibility>Collapsed</Visibility>
+                                </DiscreteObjectKeyFrame.Value>
+                            </DiscreteObjectKeyFrame>
+                        </ObjectAnimationUsingKeyFrames>
+                        <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.Visibility)" Storyboard.TargetName="OrdersListView">
+                            <DiscreteObjectKeyFrame KeyTime="0">
+                                <DiscreteObjectKeyFrame.Value>
+                                    <Visibility>Collapsed</Visibility>
+                                </DiscreteObjectKeyFrame.Value>
+                            </DiscreteObjectKeyFrame>
+                        </ObjectAnimationUsingKeyFrames>
+                        <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.Visibility)" Storyboard.TargetName="NoticeTextBlock">
+                            <DiscreteObjectKeyFrame KeyTime="0">
+                                <DiscreteObjectKeyFrame.Value>
+                                    <Visibility>Visible</Visibility>
+                                </DiscreteObjectKeyFrame.Value>
+                            </DiscreteObjectKeyFrame>
+                        </ObjectAnimationUsingKeyFrames>
+                    </Storyboard>
+                </VisualState>
+            </VisualStateGroup>
+        </VisualStateManager.VisualStateGroups>
+        <Grid.ChildrenTransitions>
+            <TransitionCollection>
+                <EntranceThemeTransition/>
+            </TransitionCollection>
+        </Grid.ChildrenTransitions>
 
-		<Grid.RowDefinitions>
-			<RowDefinition Height="Auto"/>
-			<RowDefinition Height="*"/>
-		</Grid.RowDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
 
-		<!-- Panneau Titre -->
-		<StackPanel Grid.Row="0" Margin="19,0,0,0">
-			<TextBlock Text="{StaticResource AppName}" Style="{ThemeResource TitleTextBlockStyle}" Margin="0,12,0,0"/>
-			<TextBlock Margin="0,-6.5,0,10" 
-				       Text="{Binding CommandViewModel.Date, Converter={StaticResource DateTimeToRelativeStringConverter}}"
-				       Style="{ThemeResource HeaderTextBlockStyle}" 
-				       TextLineBounds="Full"
+        <!-- Panneau Titre -->
+        <StackPanel Grid.Row="0" Margin="19,0,0,0">
+            <TextBlock Text="{StaticResource AppName}" Style="{ThemeResource TitleTextBlockStyle}" Margin="0,12,0,0"/>
+            <TextBlock Margin="0,-6.5,0,10" 
+                       Text="{Binding CommandViewModel.Date, Converter={StaticResource DateTimeToRelativeStringConverter}}"
+                       Style="{ThemeResource HeaderTextBlockStyle}" 
+                       TextLineBounds="Full"
                        CharacterSpacing="{ThemeResource PivotHeaderItemCharacterSpacing}" />
-		</StackPanel>
+        </StackPanel>
 
-		<Grid Grid.Row="1">
-			<ProgressRing Width="20" Height="20" 
-				          Foreground="White"
-				          Background="Transparent"
-				          Opacity="0.5"
-				          IsActive="{Binding Processing}" />
-			<ctrls:StrippedListView x:Name="OrdersListView" 
-				                    ItemsSource="{Binding CommandViewModel.OrderViewModels}"
-				                    IsItemClickEnabled="True"
-				                    ItemClick="ListViewBase_OnItemClick"
-				                    Colors="{Binding Colors, ElementName=RootPage}">
-				<ctrls:StrippedListView.ItemContainerStyle>
-					<Style TargetType="ListViewItem">
-						<Setter Property="HorizontalContentAlignment" Value="Stretch" />
-					</Style>
-				</ctrls:StrippedListView.ItemContainerStyle>
-                
-				<ctrls:StrippedListView.Header>
-					<Grid Visibility="{Binding IsChecked, Converter={StaticResource BooleanToVisibilityConveter}, ElementName=RecapToggleButton}">
-						<Grid.ColumnDefinitions>
-							<ColumnDefinition Width="Auto" />
-							<ColumnDefinition Width="*" />
-						</Grid.ColumnDefinitions>
-                        
-						<TextBlock FontFamily="Segoe UI Symbol"
-							       FontSize="30"
-							       Margin="20,0,10,0"
-							       HorizontalAlignment="Center"
-							       VerticalAlignment="Center"
-							       Text="🍴" />
-                        
-						<ItemsControl Grid.Column="1" Margin="20" ItemsSource="{Binding CommandViewModel.Recap}">
-							<ItemsControl.ItemTemplate>
-								<DataTemplate>
-									<TextBlock Style="{StaticResource ListViewItemTextBlockStyle}">
-										<Run Text="{Binding Name}" />
-										<Run Text=" x" />
-										<Run Text="{Binding Value}" />
-									</TextBlock>
-								</DataTemplate>
-							</ItemsControl.ItemTemplate>
-						</ItemsControl>
-					</Grid>
-				</ctrls:StrippedListView.Header>
-                
-				<ctrls:StrippedListView.ItemTemplate>
-					<DataTemplate>
-						<Grid Margin="20">
-							<StackPanel Opacity="{Binding Checked, Converter={StaticResource BooleanToColorConveter}}">
-								<Grid>
-									<Grid.ColumnDefinitions>
-										<ColumnDefinition Width="Auto" />
-										<ColumnDefinition Width="*" />
-									</Grid.ColumnDefinitions>
-									<TextBlock Grid.Column="0" Style="{StaticResource ListViewItemTextBlockStyle}">
-										<Run Text="{Binding Order.Size, Converter={StaticResource StringToUpperStringConverter}}" /> 
-										<Run Text="{Binding Order.Pasta, Converter={StaticResource StringToCamelCaseString}}" />
-									</TextBlock>
+        <Grid Grid.Row="1">
+            <ProgressRing x:Name="ProgressRing" Width="20" Height="20" 
+                          Foreground="White"
+                          Background="Transparent"
+                          Opacity="0.5"
+                          IsActive="{Binding Processing}" />
+            <ctrls:StrippedListView x:Name="OrdersListView"
+                                    ItemsSource="{Binding CommandViewModel.OrderViewModels}"
+                                    IsItemClickEnabled="True"
+                                    ItemClick="ListViewBase_OnItemClick"
+                                    Colors="{Binding Colors, ElementName=RootPage}">
+                <ctrls:StrippedListView.ItemContainerStyle>
+                    <Style TargetType="ListViewItem">
+                        <Setter Property="HorizontalContentAlignment" Value="Stretch" />
+                    </Style>
+                </ctrls:StrippedListView.ItemContainerStyle>
 
-									<TextBlock Grid.Column="1" 
+                <ctrls:StrippedListView.Header>
+                    <Grid Visibility="{Binding IsChecked, Converter={StaticResource BooleanToVisibilityConveter}, ElementName=RecapToggleButton}">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition Width="*" />
+                        </Grid.ColumnDefinitions>
+
+                        <TextBlock FontFamily="Segoe UI Symbol"
+                                   FontSize="30"
+                                   Margin="20,0,10,0"
+                                   HorizontalAlignment="Center"
+                                   VerticalAlignment="Center"
+                                   Text="🍴" />
+
+                        <ItemsControl Grid.Column="1" Margin="20" ItemsSource="{Binding CommandViewModel.Recap}">
+                            <ItemsControl.ItemTemplate>
+                                <DataTemplate>
+                                    <TextBlock Style="{StaticResource ListViewItemTextBlockStyle}">
+                                        <Run Text="{Binding Name}" />
+                                        <Run Text=" x" />
+                                        <Run Text="{Binding Value}" />
+                                    </TextBlock>
+                                </DataTemplate>
+                            </ItemsControl.ItemTemplate>
+                        </ItemsControl>
+                    </Grid>
+                </ctrls:StrippedListView.Header>
+
+                <ctrls:StrippedListView.ItemTemplate>
+                    <DataTemplate>
+                        <Grid Margin="20">
+                            <StackPanel Opacity="{Binding Checked, Converter={StaticResource BooleanToColorConveter}}">
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="Auto" />
+                                        <ColumnDefinition Width="*" />
+                                    </Grid.ColumnDefinitions>
+                                    <TextBlock Grid.Column="0" Style="{StaticResource ListViewItemTextBlockStyle}">
+                                        <Run Text="{Binding Order.Size, Converter={StaticResource StringToUpperStringConverter}}" /> 
+                                        <Run Text="{Binding Order.Pasta, Converter={StaticResource StringToCamelCaseString}}" />
+                                    </TextBlock>
+
+                                    <TextBlock Grid.Column="1" 
                                                Text="{Binding Order.Name}" 
                                                VerticalAlignment="Center"
                                                MaxLines="1"
                                                TextTrimming="CharacterEllipsis"
                                                Margin="20,0,0,0"
                                                Style="{StaticResource ListViewEmptyStaticTextBlockStyle}"/>
-								</Grid>
+                                </Grid>
 
-								<Grid>
-									<Grid.ColumnDefinitions>
-										<ColumnDefinition Width="*" />
-										<ColumnDefinition Width="Auto" />
-									</Grid.ColumnDefinitions>
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="*" />
+                                        <ColumnDefinition Width="Auto" />
+                                    </Grid.ColumnDefinitions>
 
-									<ItemsControl Grid.Column="0" ItemsSource="{Binding Order.Sauces}">
-										<ItemsControl.ItemTemplate>
-											<DataTemplate>
-												<TextBlock Style="{StaticResource ListViewItemContentTextBlockStyle}" 
-													       Text="{Binding Converter={StaticResource StringToCamelCaseString}}" 
-													       IsTextScaleFactorEnabled="True"
-													       FontSize="20"
-													       TextWrapping="Wrap"/>
-											</DataTemplate>
-										</ItemsControl.ItemTemplate>
-									</ItemsControl>
+                                    <ItemsControl Grid.Column="0" ItemsSource="{Binding Order.Sauces}">
+                                        <ItemsControl.ItemTemplate>
+                                            <DataTemplate>
+                                                <TextBlock Style="{StaticResource ListViewItemContentTextBlockStyle}" 
+                                                           Text="{Binding Converter={StaticResource StringToCamelCaseString}}" 
+                                                           IsTextScaleFactorEnabled="True"
+                                                           FontSize="20"
+                                                           TextWrapping="Wrap"/>
+                                            </DataTemplate>
+                                        </ItemsControl.ItemTemplate>
+                                    </ItemsControl>
 
-									<TextBlock Grid.Column="1" 
-										       TextWrapping="Wrap"
-										       TextAlignment="Center" 
-										       Style="{StaticResource ListViewItemTextBlockStyle}"
-										       Text="{Binding ToppingsAbbreviation}" />
-								</Grid>
-							</StackPanel>
-                            
-							<TextBlock VerticalAlignment="Center" 
-								       HorizontalAlignment="Center"
-								       FontFamily="Segoe UI Symbol" 
-								       Text="&#xE10B;"
-								       FontSize="50"
-								       Visibility="{Binding Checked, Converter={StaticResource BooleanToVisibilityConveter}}" />
-						</Grid>
+                                    <TextBlock Grid.Column="1" 
+                                               TextWrapping="Wrap"
+                                               TextAlignment="Center" 
+                                               Style="{StaticResource ListViewItemTextBlockStyle}"
+                                               Text="{Binding ToppingsAbbreviation}" />
+                                </Grid>
+                            </StackPanel>
 
-					</DataTemplate>
-				</ctrls:StrippedListView.ItemTemplate>
-			</ctrls:StrippedListView>
-		</Grid>
-	</Grid>
+                            <TextBlock VerticalAlignment="Center" 
+                                       HorizontalAlignment="Center"
+                                       FontFamily="Segoe UI Symbol" 
+                                       Text="&#xE10B;"
+                                       FontSize="50"
+                                       Visibility="{Binding Checked, Converter={StaticResource BooleanToVisibilityConveter}}" />
+                        </Grid>
+
+                    </DataTemplate>
+                </ctrls:StrippedListView.ItemTemplate>
+            </ctrls:StrippedListView>
+            <TextBlock x:Name="NoticeTextBlock" 
+                       HorizontalAlignment="Center" 
+                       TextWrapping="Wrap" 
+                       VerticalAlignment="Top"
+                       Margin="20"
+                       Visibility="Collapsed"
+                       Style="{StaticResource GroupHeaderTextBlockStyle}"
+                       Text="Aucune commande enregistrée pour l'instant." />
+        </Grid>
+    </Grid>
 
     <Page.BottomAppBar>
         <CommandBar IsEnabled="{Binding Processing, Converter={StaticResource BooleanToInversedBooleanConveter}}">
@@ -183,14 +221,22 @@
                     </core:EventTriggerBehavior>
                 </interactivity:Interaction.Behaviors>
             </AppBarButton>
-            <AppBarButton Icon="Sync" Label="actualiser" />
-            
+            <AppBarButton Icon="Sync" Label="actualiser" 
+                          Click="RefreshButton_OnClick"/>
+
             <CommandBar.SecondaryCommands>
                 <AppBarToggleButton x:Name="RecapToggleButton" 
                                     Checked="RecapToggleButton_OnChecked"
                                     Icon="AllApps" 
-                                    Label="récap'"
+                                    Label="récaputilatif"
                                     IsThreeState="False" />
+                <AppBarButton Label="réglages" Icon="Setting">
+                    <interactivity:Interaction.Behaviors>
+                        <core:EventTriggerBehavior EventName="Click">
+                            <core:NavigateToPageAction TargetPage="PapaciccioPhone.Pages.SettingsPage"/>
+                        </core:EventTriggerBehavior>
+                    </interactivity:Interaction.Behaviors>
+                </AppBarButton>
             </CommandBar.SecondaryCommands>
         </CommandBar>
     </Page.BottomAppBar>

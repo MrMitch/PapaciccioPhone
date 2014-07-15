@@ -1,6 +1,9 @@
 ﻿// Pour plus d'informations sur le modèle Application vide, consultez la page http://go.microsoft.com/fwlink/?LinkId=391641
 
+using System.Linq;
 using Windows.Storage;
+using Windows.System.UserProfile;
+using PapaciccioPhone.Common;
 using PapaciccioPhone.Pages;
 using System;
 using Windows.ApplicationModel;
@@ -65,6 +68,8 @@ namespace PapaciccioPhone
                 Window.Current.Content = rootFrame;
             }
 
+            NavigationService.Frame = Window.Current.Content as Frame;
+
             if (rootFrame.Content == null)
             {
                 // Supprime la navigation tourniquet pour le démarrage.
@@ -80,33 +85,30 @@ namespace PapaciccioPhone
                 rootFrame.ContentTransitions = null;
                 rootFrame.Navigated += this.RootFrame_FirstNavigated;
 
-                Type destinationPageType = null;
-                object args = null;
-
 #if DEBUG
-                destinationPageType = typeof (CommandPage);
-                args = DateTime.Now;
+                NavigationService.GoToCommandPage(DateTime.Today);
+
 #else
                 var serverAddress = ApplicationData.Current.RoamingSettings.Values["serverAddress"] as string;
-
-                if (String.IsNullOrEmpty(serverAddress))
+                var name = ApplicationData.Current.LocalSettings.Values["name"] as string;
+                
+                if (String.IsNullOrEmpty(serverAddress) || String.IsNullOrEmpty(name))
                 {
-                    destinationPageType = typeof (FirstLaunchPage);
+                    NavigationService.GoToSettingsPage();
                 }
                 else
                 {
-                    destinationPageType = typeof (CommandPage);
-                    args = DateTime.Now;
+                    NavigationService.GoToCommandPage(DateTime.Today);
                 }
 #endif
 
                 // Quand la pile de navigation n'est pas restaurée, accédez à la première page,
                 // puis configurez la nouvelle page en transmettant les informations requises en tant que
                 // paramètre
-                if (!rootFrame.Navigate(destinationPageType, args))
+                /*if (!rootFrame.Navigate(destinationPageType, args))
                 {
                     throw new Exception("Failed to create initial page");
-                }
+                }*/
             }
 
             // Vérifiez que la fenêtre actuelle est active

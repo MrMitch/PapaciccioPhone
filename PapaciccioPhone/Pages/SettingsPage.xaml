@@ -1,5 +1,5 @@
 ﻿<Page x:Name="RootPage"
-    x:Class="PapaciccioPhone.Pages.FirstLaunchPage"
+    x:Class="PapaciccioPhone.Pages.SettingsPage"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:local="using:PapaciccioPhone.Pages"
@@ -17,19 +17,20 @@
             <TextBlock Text="{StaticResource AppName}" 
                        HorizontalAlignment="Center"
                        FontSize="50" FontWeight="Light"/>
-            <!--
-            <TextBlock Margin="10,100,10,10" 
-                       HorizontalAlignment="Center" 
-                       Style="{StaticResource ControlHeaderTextBlockStyle}"
-                       Text="Please enter the server address :" />
             
-            -->
             <TextBox HorizontalAlignment="Stretch"
-                     Margin="10,100,10,10" 
-                     PlaceholderText="Please enter the server address"
+                     Margin="10,50,10,10" 
+                     Header="Serveur"
+                     PlaceholderText="Adresse du serveur"
                      AcceptsReturn="False" 
                      InputScope="Url"
                      Text="{Binding ServerAddress, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+            <TextBox HorizontalAlignment="Stretch"
+                     Margin="10,50,10,10" 
+                     Header="Nom à utiliser dans les commandes"
+                     PlaceholderText="Nom prénom"
+                     AcceptsReturn="False" 
+                     Text="{Binding Name, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
         </StackPanel>
     </Grid>
 
@@ -37,7 +38,7 @@
         <CommandBar IsSticky="True">
             <AppBarButton Label="Validate" 
                           Icon="Accept"
-                          Command="{Binding SubmitServerAddressCommand}"/>
+                          Command="{Binding SubmitSettingsCommand}"/>
         </CommandBar>
     </Page.BottomAppBar>
 </Page>

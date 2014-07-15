@@ -1,12 +1,10 @@
 ﻿using System;
 using Windows.Storage;
-using Windows.UI.Xaml.Controls;
 using PapaciccioPhone.Common;
-using PapaciccioPhone.Pages;
 
 namespace PapaciccioPhone.ViewModels
 {
-    public class FirstLaunchPageViewModel : BindableViewModel
+    public class SettingsPageViewModel : BindableViewModel
     {
         private string _serverAddress;
         public string ServerAddress
@@ -15,31 +13,43 @@ namespace PapaciccioPhone.ViewModels
             set
             {
                 SetValue(ref _serverAddress, value);
-                SubmitServerAddressCommand.RaiseCanExecuteChanged();
+                SubmitSettingsCommand.RaiseCanExecuteChanged();
             }
         }
 
-        public Frame Frame { get; set; }
-
-        private RelayCommand _submitServerAddressCommand;
-        public RelayCommand SubmitServerAddressCommand
+        private string _name;
+        public string Name
+        {
+            get { return _name; }
+            set
+            {
+                SetValue(ref _name, value);
+                SubmitSettingsCommand.RaiseCanExecuteChanged();
+            }
+        }
+        
+        private RelayCommand _submitSettingsCommand;
+        public RelayCommand SubmitSettingsCommand
         {
             get
             {
-                if (_submitServerAddressCommand == null)
+                if (_submitSettingsCommand == null)
                 {
-                    _submitServerAddressCommand = new RelayCommand(
+                    _submitSettingsCommand = new RelayCommand(
                         () =>
                         {
                             SaveServerAddress(ServerAddress);
-                            //Frame.Navigate(typeof(CommandPage), DateTime.Now);
-                            Frame.Navigate(typeof(CommandPage), new DateTime(2014, 7, 10));
+                            ApplicationData.Current.LocalSettings.Values["name"] = _name;
+
+                            NavigationService.GoToCommandPage(DateTime.Today);
                         },
                         () => !String.IsNullOrEmpty(ServerAddress)
                             && !String.IsNullOrWhiteSpace(ServerAddress)
+                            && !String.IsNullOrEmpty(Name)
+                            && !String.IsNullOrWhiteSpace(Name)
                     );
                 }
-                return _submitServerAddressCommand;
+                return _submitSettingsCommand;
             }
         }
         

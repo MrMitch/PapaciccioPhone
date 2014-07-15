@@ -77,9 +77,7 @@
 
                     <ComboBox PlaceholderText="Pâtes" 
                               SelectedItem="{Binding Pasta, Mode=TwoWay}"
-                              ItemsSource="{Binding AvailablePasta}"
-                              Background="Transparent"
-                              Foreground="White"/>
+                              ItemsSource="{Binding AvailablePasta}"/>
                     
                     <ComboBox PlaceholderText="Taille" 
                               ItemsSource="{Binding AvailableSizes}"
@@ -138,7 +136,7 @@
     <Page.BottomAppBar>
         <CommandBar IsEnabled="{Binding Processing, Converter={StaticResource BooleanToInversedBooleanConverter}}">
             <AppBarButton Icon="Accept" Label="commander" Command="{Binding SubmitOrderCommand}" />
-            <AppBarButton Icon="Cancel" Label="annuler" />
+            <AppBarButton Icon="Cancel" Label="annuler" Command="{Binding CancelCommand}"/>
         </CommandBar>
     </Page.BottomAppBar>
 </Page>

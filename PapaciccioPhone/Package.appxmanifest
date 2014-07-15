@@ -17,7 +17,11 @@
   <Applications>
     <Application Id="App" Executable="$targetnametoken$.exe" EntryPoint="PapaciccioPhone.App">
       <m3:VisualElements DisplayName="Papaciccio" Square150x150Logo="Assets\StoreImages\Logo.png" Square44x44Logo="Assets\StoreImages\SmallLogo.png" Description="Papaciccio" ForegroundText="light" BackgroundColor="transparent">
+        <m3:LockScreen Notification="badge" BadgeLogo="Assets\StoreImages\BadgeLogo.png" />
         <m3:DefaultTile Wide310x150Logo="Assets\StoreImages\WideLogo.png" Square71x71Logo="Assets\StoreImages\Square71x71Logo.png">
+          <m3:ShowNameOnTiles>
+            <m3:ShowOn Tile="square150x150Logo" />
+          </m3:ShowNameOnTiles>
         </m3:DefaultTile>
         <m3:SplashScreen Image="Assets\StoreImages\SplashScreen.png" />
       </m3:VisualElements>
