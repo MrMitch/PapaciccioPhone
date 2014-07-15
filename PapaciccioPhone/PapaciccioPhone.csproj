@@ -152,6 +152,8 @@
     <Content Include="Assets\StoreImages\StoreLogo.scale-100.png" />
     <Content Include="Assets\StoreImages\StoreLogo.scale-140.png" />
     <Content Include="Assets\StoreImages\StoreLogo.scale-240.png" />
+    <Content Include="Assets\StoreImages\WideLogo.scale-100.png" />
+    <Content Include="Assets\StoreImages\WideLogo.scale-140.png" />
     <Content Include="Assets\StoreImages\WideLogo.scale-240.png" />
   </ItemGroup>
   <ItemGroup>

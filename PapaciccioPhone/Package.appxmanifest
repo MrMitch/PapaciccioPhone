@@ -21,6 +21,7 @@
         <m3:DefaultTile Wide310x150Logo="Assets\StoreImages\WideLogo.png" Square71x71Logo="Assets\StoreImages\Square71x71Logo.png">
           <m3:ShowNameOnTiles>
             <m3:ShowOn Tile="square150x150Logo" />
+            <m3:ShowOn Tile="wide310x150Logo" />
           </m3:ShowNameOnTiles>
         </m3:DefaultTile>
         <m3:SplashScreen Image="Assets\StoreImages\SplashScreen.png" />
