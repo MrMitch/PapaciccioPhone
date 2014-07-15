@@ -30,6 +30,7 @@ namespace PapaciccioPhone.ViewModels
 
             if (command == null)
             {
+                Processing = false;
                 return null;
             }
 

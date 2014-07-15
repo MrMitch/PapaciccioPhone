@@ -74,7 +74,7 @@ namespace PapaciccioPhone.Pages
             }
             else
             {
-                if (commandDate != DateTime.Now)
+                if (commandDate.Date != DateTime.Today)
                 {
                     var msg = new MessageDialog("Pas de commande pour cette date", "Oops");
                     msg.Commands.Add(new UICommand("Ok", uiCommand => Frame.Navigate(typeof (CommandPage), DateTime.Now)));
